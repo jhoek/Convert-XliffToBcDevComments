@@ -1,3 +1,4 @@
+using System.Collections.Frozen;
 using Microsoft.Dynamics.Nav.CodeAnalysis.Syntax;
 
 namespace ConvertXliffToBcDevComments;
@@ -42,11 +43,15 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
 
         if (!translations.Any()) return;
 
-        var objects = ObjectFilePaths.Select(p => new { Path = p, Object = SyntaxFactory.ParseSyntaxTree(File.ReadAllText(p), p).GetRoot().ChildNodes() });
+        var objects = ObjectFilePaths.Select(p => new { Path = p, Object = SyntaxFactory.ParseSyntaxTree(File.ReadAllText(p), p).GetRoot().ChildNodes().Cast<ObjectSyntax>() });
+
+        WriteObject(objects.SelectMany(o => o.Object).FindFromContext(CachedTranslations.First().Context)); // etc.
 
 
         // FIXME: Find object and subobject based on translation context
         // FIXME: Apply translation if missing or -Force, warn if context not found
         // FIXME: Write dirty objects
     }
+
+
 }
