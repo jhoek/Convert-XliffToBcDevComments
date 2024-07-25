@@ -11,4 +11,5 @@ public enum ContextElementType
     EnumValue,
     Property,
     NamedType,
+    Method,
 }
