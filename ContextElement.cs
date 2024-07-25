@@ -1,12 +1,16 @@
+using System.Collections;
 using System.Collections.ObjectModel;
 
 namespace ConvertXliffToBcDevComments;
 
 public enum ContextElementType
 {
+    Table,
+    Field,
     Enum,
     EnumValue,
-    Property
+    Property,
+    NamedType
 }
 
 public class ContextElement
@@ -21,18 +25,16 @@ public class Context
     {
 
 
-        var elements = rawContext.Split(" - Property ");
 
-        Property = new ContextElement()
-        {
-            Type = ContextElementType.Property,
-            Name = elements[1]
-        };
 
-        rawContext = elements[0];
+
+
     }
 
-    public ContextElement Object { get; }
-    public Collection<ContextElement> Subobjects { get; } = [];
-    public ContextElement Property { get; }
+    public IEnumerable<string> Elements(string rawContext)
+    {
+
+
+
+    }
 }

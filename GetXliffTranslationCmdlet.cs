@@ -61,7 +61,7 @@ public class GetXliffTranslationCmdlet : PSCmdlet
                     Source = u.Source,
                     Target = u.Target,
                     RawContext = u.RawContext,
-                    Context = new Context(u.RawContext)
+                    // Context = new Context(u.RawContext)
                 }),
             true
         );

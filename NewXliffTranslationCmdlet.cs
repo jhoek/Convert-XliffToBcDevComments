@@ -7,11 +7,12 @@ namespace ConvertXliffToBcDevComments;
 public class NewXliffTranslationCmdlet : Cmdlet
 {
     [Parameter()] public string XliffPath { get; set; }
-    [Parameter()] public string SourceLanguage { get; set; } = "en-US";
-    [Parameter()] public string TargetLanguage { get; set; }
+    [Parameter()] public string SourceLanguage { get; set; } = Facts.BaseLanguage;
+    [Parameter(Mandatory = true)] public string TargetLanguage { get; set; }
     [Parameter()] public string Source { get; set; }
-    [Parameter()] public string Target { get; set; }
-    [Parameter()] public string RawContext { get; set; }
+    [Parameter(Mandatory = true)] public string Target { get; set; }
+    [Parameter()] public TranslationState? TargetState { get; set; }
+    [Parameter(Mandatory = true)] public string RawContext { get; set; }
 
     protected override void EndProcessing()
     {
@@ -23,8 +24,9 @@ public class NewXliffTranslationCmdlet : Cmdlet
                 TargetLanguage = TargetLanguage,
                 Source = Source,
                 Target = Target,
+                TargetState = TargetState,
                 RawContext = RawContext,
-                Context = new Context(RawContext)
+                // Context = new Context(RawContext)
             }
         );
     }
