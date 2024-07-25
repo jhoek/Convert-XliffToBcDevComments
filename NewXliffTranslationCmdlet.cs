@@ -17,7 +17,7 @@ public class NewXliffTranslationCmdlet : Cmdlet
     protected override void EndProcessing()
     {
         WriteObject(
-            new XliffTranslation()
+            new XliffTranslation(RawContext)
             {
                 XliffPath = XliffPath,
                 SourceLanguage = SourceLanguage,
@@ -25,8 +25,6 @@ public class NewXliffTranslationCmdlet : Cmdlet
                 Source = Source,
                 Target = Target,
                 TargetState = TargetState,
-                RawContext = RawContext,
-                // Context = new Context(RawContext)
             }
         );
     }

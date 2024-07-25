@@ -52,7 +52,7 @@ public class GetXliffTranslationCmdlet : PSCmdlet
                     }
                     )
                 )
-                .Select(u => new XliffTranslation()
+                .Select(u => new XliffTranslation(u.RawContext)
                 {
                     XliffPath = u.Path,
                     SourceLanguage = u.SourceLanguage,
@@ -60,8 +60,6 @@ public class GetXliffTranslationCmdlet : PSCmdlet
                     TargetState = TranslationStateParser.Parse(u.TargetState),
                     Source = u.Source,
                     Target = u.Target,
-                    RawContext = u.RawContext,
-                    // Context = new Context(u.RawContext)
                 }),
             true
         );
