@@ -46,7 +46,9 @@ public class GetTranslationFromXliffCmdlet : PSCmdlet
                         p.SourceLanguage,
                         p.TargetLanguage,
                         Source = u.Element(@namespace + "source").Value,
-                        Target = u.Element(@namespace + "target")?.Value
+                        Target = u.Element(@namespace + "target")?.Value,
+                        TargetState = u.Element(@namespace + "target")?.Attribute("state")?.Value,
+                        Context = u.Elements(@namespace + "note").SingleOrDefault(e => e.Attribute("from")?.Value == "Xliff Generator")?.Value
                     }
                     )
                 )
@@ -55,8 +57,10 @@ public class GetTranslationFromXliffCmdlet : PSCmdlet
                     XliffPath = u.Path,
                     SourceLanguage = u.SourceLanguage,
                     TargetLanguage = u.TargetLanguage,
+                    TargetState = u.TargetState,
                     Source = u.Source,
-                    Target = u.Target
+                    Target = u.Target,
+                    Context = u.Context
                 }),
             true
         );
