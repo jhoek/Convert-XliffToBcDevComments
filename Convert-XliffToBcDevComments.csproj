@@ -9,6 +9,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Reference Include="Microsoft.Dynamics.Nav.CodeAnalysis.dll">
+            <HintPath>/Users/jhoek/.vscode/extensions/ms-dynamics-smb.al-13.1.1065068/bin/darwin/Microsoft.Dynamics.Nav.CodeAnalysis.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="PowershellStandard.Library" Version="5.1.1" />
     </ItemGroup>
 

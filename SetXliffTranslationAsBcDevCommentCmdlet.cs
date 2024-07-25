@@ -1,3 +1,5 @@
+using Microsoft.Dynamics.Nav.CodeAnalysis.Syntax;
+
 namespace ConvertXliffToBcDevComments;
 
 [Cmdlet(VerbsCommon.Set, "XliffTranslationAsBcDevComment")]
@@ -20,6 +22,13 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
 
     protected List<XliffTranslation> CachedTranslations = [];
 
+    protected SearchOption SearchOption =>
+        Recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+    protected IEnumerable<string> ObjectFilePaths =>
+        GetResolvedProviderPathFromPSPath(ObjectPath, out _)
+            .SelectMany(p => Directory.Exists(p) ? Directory.GetFiles(p, "*.al", SearchOption) : [p]);
+
     protected override void ProcessRecord()
     {
         CachedTranslations.AddRange(Translations);
@@ -27,11 +36,16 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
 
     protected override void EndProcessing()
     {
-        CachedTranslations
+        var translations = CachedTranslations
             .Where(t => t.TargetLanguage != Facts.BaseLanguage)
             .Where(t => IncludeState.Contains(t.TargetState ?? TranslationState.Translated));
 
-        // FIXME: Cache objects
+        if (!translations.Any()) return;
+
+        var objects = ObjectFilePaths.Select(p => new { Path = p, Object = SyntaxFactory.ParseSyntaxTree(File.ReadAllText(p), p).GetRoot().ChildNodes() });
+
+
+        // FIXME: Find object and subobject based on translation context
         // FIXME: Apply translation if missing or -Force, warn if context not found
         // FIXME: Write dirty objects
     }
