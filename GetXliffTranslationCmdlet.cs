@@ -2,9 +2,9 @@
 
 namespace ConvertXliffToBcDevComments;
 
-[Cmdlet(VerbsCommon.Get, "TranslationFromXliff")]
+[Cmdlet(VerbsCommon.Get, Nouns.XliffTranslation)]
 [OutputType(typeof(XliffTranslation))]
-public class GetTranslationFromXliffCmdlet : PSCmdlet
+public class GetXliffTranslationCmdlet : PSCmdlet
 {
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
     [Alias("FullName")]
@@ -60,7 +60,7 @@ public class GetTranslationFromXliffCmdlet : PSCmdlet
                     TargetState = TranslationStateParser.Parse(u.TargetState),
                     Source = u.Source,
                     Target = u.Target,
-                    RawContext =u.RawContext,
+                    RawContext = u.RawContext,
                     Context = new Context(u.RawContext)
                 }),
             true
