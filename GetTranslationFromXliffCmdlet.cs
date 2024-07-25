@@ -57,11 +57,11 @@ public class GetTranslationFromXliffCmdlet : PSCmdlet
                     XliffPath = u.Path,
                     SourceLanguage = u.SourceLanguage,
                     TargetLanguage = u.TargetLanguage,
-                    TargetState = u.TargetState,
+                    TargetState = TranslationStateParser.Parse(u.TargetState),
                     Source = u.Source,
                     Target = u.Target,
-                    Context = u.RawContext, // FIXME: minus property
-                    // FIXME: Property =
+                    RawContext =u.RawContext,
+                    Context = new Context(u.RawContext)
                 }),
             true
         );

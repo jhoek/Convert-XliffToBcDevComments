@@ -8,7 +8,23 @@ public class AddBcDevCommentCmdlet : PSCmdlet
     [Parameter(Mandatory = true, ValueFromPipeline = true)]
     public XliffTranslation[] Translations { get; set; }
 
+    [Parameter()]
+    public SwitchParameter Force { get; set; }
 
+    protected List<XliffTranslation> CachedTranslations = [];
+
+    protected override void ProcessRecord()
+    {
+        CachedTranslations.AddRange(Translations);
+    }
+
+    protected override void EndProcessing()
+    {
+        // Cache objects
+
+
+        // Write dirty objects
+    }
 
 
 
