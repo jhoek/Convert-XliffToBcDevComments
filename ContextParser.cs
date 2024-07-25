@@ -6,10 +6,10 @@ public static class ContextParser
     {
         var elements = new List<ContextElement>();
 
-        elements.AppendIfNotNull(TryConsumeElement(ref rawContext, @" \- Property ([\w\s]+)$", ContextElementType.Property));
-        elements.PrependIfNotNull(TryConsumeElement(ref rawContext, @" \- Field ([\w\s]+)$", ContextElementType.Field));
-        elements.PrependIfNotNull(TryConsumeElement(ref rawContext, @" \- Action ([\w\s]+)$", ContextElementType.Action));
-        elements.PrependIfNotNull(TryConsumeElement(ref rawContext, @" \- EnumValue ([\w\s]+)$", ContextElementType.EnumValue));
+        elements.AppendIfNotNull(TryConsumeElement(ref rawContext, @" \- Property (.+)$", ContextElementType.Property));
+        elements.PrependIfNotNull(TryConsumeElement(ref rawContext, @" \- Field (.+)$", ContextElementType.Field));
+        elements.PrependIfNotNull(TryConsumeElement(ref rawContext, @" \- Action (.+)$", ContextElementType.Action));
+        elements.PrependIfNotNull(TryConsumeElement(ref rawContext, @" \- EnumValue (.+)$", ContextElementType.EnumValue));
         elements.PrependIfNotNull(TryConsumeElement(ref rawContext, @"^Table (.+)$", ContextElementType.Table));
         elements.PrependIfNotNull(TryConsumeElement(ref rawContext, @"^Page (.+)$", ContextElementType.Page));
         elements.PrependIfNotNull(TryConsumeElement(ref rawContext, @"^Enum (.+)$", ContextElementType.Enum));
