@@ -1,4 +1,4 @@
-Get-ChildItem -Path NakCore:/Translations -Exclude *.g.xlf | Get-XliffTranslation | Where-Object { $_.Context.Length -ne (($_.RawContext.ToCharArray() -eq '-').Count + 1) }
+Get-ChildItem -Path NakCore:/Translations -Exclude *.g.xlf | Get-XliffTranslation | Select-Object -First 100 -Property RawContext, Context, @{ n = 'normalcount'; e = { ($_.Context).Count } }, @{n = 'RawCount'; e = { ($_.RawContext.ToCharArray() | Where-Object { $_ -eq '-' }).length } } | Where-Object { $_.RawCount + 1 -ne $_.NormalCount }
 
 # New-XliffTranslation -TargetLanguage nl-NL -Target 'My Translation' -RawContext 'Table Accorderingsroute - Field Accorderingsroute - Property Caption'
 # | Set-XliffTranslationAsBcDevComment -ObjectPath NakCore:/ -Recurse
