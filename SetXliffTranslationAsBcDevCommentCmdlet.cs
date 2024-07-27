@@ -41,15 +41,26 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
             .Where(t => t.TargetLanguage != Facts.BaseLanguage)
             .Where(t => IncludeState.Contains(t.TargetState ?? TranslationState.Translated));
 
-        if (!translations.Any()) return;
+        if (!translations.Any())
+            return;
 
-        var objects = ObjectFilePaths.Select(p => new { Path = p, Object = SyntaxFactory.ParseSyntaxTree(File.ReadAllText(p), p).GetRoot().ChildNodes().Cast<ObjectSyntax>() });
+        var objects = ObjectFilePaths
+            .Select(p => new
+            {
+                Path = p,
+                Object = SyntaxFactory.ParseSyntaxTree(File.ReadAllText(p), p).GetRoot().ChildNodes().Cast<ObjectSyntax>().SingleOrDefault()
+            })
+            .Where(o => o.Object is not null)
+            .Select(o => o.Object); // FIXME: for now
 
-        WriteObject(objects.SelectMany(o => o.Object).FindFromContext(CachedTranslations.First().Context)); // etc.
+        CachedTranslations.First().ApplyTo(objects);
 
 
-        // FIXME: Find object and subobject based on translation context
-        // FIXME: Apply translation if missing or -Force, warn if context not found
+        // WriteObject(objects.SelectMany(o => o.Object).FindFromContext(CachedTranslations.First().Context)); // etc.
+
+        // FIXME: Loop through translations:
+        // FIXME: - Find object and subobject based on translation context
+        // FIXME: - Apply translation if missing or -Force, warn if context not found
         // FIXME: Write dirty objects
     }
 
