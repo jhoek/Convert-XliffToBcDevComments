@@ -5,6 +5,32 @@ namespace ConvertXliffToBcDevComments;
 
 public static class ExtensionMethods
 {
+    public static SyntaxNode Resolve(this IEnumerable<SyntaxNode> syntaxNodes, IEnumerable<ContextElement> contextElements)
+    {
+        switch (contextElements.First().Type)
+        {
+            case ContextElementType.Table:
+                return syntaxNodes.OfType<TableSyntax>().Where(t => t.GetNameStringValue() == contextElements.First().Name).Resolve(contextElements.Skip(1));
+            case ContextElementType.Field:
+                return syntaxNodes.OfType<FieldSyntax>().Where(f => f.GetNameStringValue() == contextElements.First().Name).Resolve(contextElements.Skip(1));
+            default:
+                throw new ArgumentOutOfRangeException(nameof(contextElements), $"Don't know how to resolve a context element of type {contextElements.First().Type}");
+        }
+    }
+
+    public static SyntaxNode Resolve(this SyntaxNode syntaxNode, IEnumerable<ContextElement> contextElements)
+    {
+        if (!contextElements.Any()) return syntaxNode;
+
+        switch (contextElements.First().Type)
+        {
+            case ContextElementType.Field:
+                return (syntaxNode as TableSyntax).Fields.Fields.Resolve(contextElements);
+            default:
+                throw new ArgumentOutOfRangeException(nameof(contextElements), $"Don't know how to resolve a context element of type {contextElements.First().Type}");
+        }
+    }
+
     public static void ApplyTo(this XliffTranslation xliffTranslation, IEnumerable<SyntaxNode> syntaxNodes) =>
         xliffTranslation
             .Context

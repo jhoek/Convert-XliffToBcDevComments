@@ -53,7 +53,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
             .Where(o => o.Object is not null)
             .Select(o => o.Object); // FIXME: for now
 
-        CachedTranslations.First().ApplyTo(objects);
+        objects.Resolve(translations.First().Context.TakeWhile(c => c.Type != ContextElementType.Property));
 
 
         // WriteObject(objects.SelectMany(o => o.Object).FindFromContext(CachedTranslations.First().Context)); // etc.
