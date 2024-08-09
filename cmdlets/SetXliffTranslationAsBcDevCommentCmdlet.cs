@@ -51,9 +51,10 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                 Object = SyntaxFactory.ParseSyntaxTree(File.ReadAllText(p), p).GetRoot().ChildNodes().Cast<ObjectSyntax>().SingleOrDefault()
             })
             .Where(o => o.Object is not null)
-            .Select(o => o.Object); // FIXME: for now
+            .Select(o => o.Object)
+            .ToList(); // FIXME: for now
 
-        objects.Resolve(translations.First().Context.TakeWhile(c => c.Type != ContextElementType.Property));
+        objects.Resolve(translations.First().Context.TakeWhile(c => c.Type != ContextElementType.Property).ToList());
 
 
         // WriteObject(objects.SelectMany(o => o.Object).FindFromContext(CachedTranslations.First().Context)); // etc.

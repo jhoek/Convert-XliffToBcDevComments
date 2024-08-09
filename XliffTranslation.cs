@@ -5,7 +5,7 @@ public class XliffTranslation
     public XliffTranslation(string rawContext)
     {
         RawContext = rawContext;
-        Context = ContextParser.Parse(RawContext);
+        Context = ContextParser.Parse(RawContext).ToList();
     }
 
     public string XliffPath { get; init; }
