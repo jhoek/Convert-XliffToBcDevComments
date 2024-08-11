@@ -54,7 +54,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
             .Select(o => o.Object)
             .ToList(); // FIXME: for now
 
-        objects.Resolve(translations.First().Context.TakeWhile(c => c.Type != ContextElementType.Property).ToList());
+        objects.Resolve(translations.First().Context.TakeWhile(c => c.Type != ContextElementType.Property).ToList(), WriteVerbose);
 
 
         // WriteObject(objects.SelectMany(o => o.Object).FindFromContext(CachedTranslations.First().Context)); // etc.
