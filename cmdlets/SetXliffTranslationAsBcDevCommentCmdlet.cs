@@ -57,6 +57,8 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
             })
             .ToList();
 
+        compilationUnits.SelectMany(c => c.Objects).ToList().ForEach(o => WriteVerbose(o.Name.Identifier.ValueText));
+
         translations
             .First() // FIXME
             .Context
