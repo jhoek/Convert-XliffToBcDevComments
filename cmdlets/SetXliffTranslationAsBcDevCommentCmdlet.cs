@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Frozen;
 using Microsoft.Dynamics.Nav.CodeAnalysis.Syntax;
 
@@ -6,6 +7,27 @@ namespace ConvertXliffToBcDevComments;
 [Cmdlet(VerbsCommon.Set, "XliffTranslationAsBcDevComment")]
 public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
 {
+    public class SetXliffTranslationAsBcDevCommentRewriter : SyntaxRewriter
+    {
+        public SetXliffTranslationAsBcDevCommentRewriter(IEnumerable<XliffTranslation> translations)
+        {
+            Translations = translations;
+        }
+
+        public IEnumerable<XliffTranslation> Translations { get; init; }
+
+        public override SyntaxNode VisitProperty(PropertySyntax node)
+        {
+            // Build context string
+            // Skip if already present and not -Force
+            // Find context string in translations
+            // Apply if found
+            // Remove from translations
+
+            return base.VisitProperty(node);
+        }
+    }
+
     [Parameter(Mandatory = true, Position = 0)]
     public string ObjectPath { get; set; }
 
