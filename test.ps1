@@ -4,7 +4,7 @@
 # | Where-Object { ($_.RawCount + 1) -ne $_.NormalCount }
 
 New-XliffTranslation -TargetLanguage nl-NL -Target 'My Translation' -RawContext 'Table Accorderingsroute - Field Accorderingsroute - Property Caption'
-| Set-XliffTranslationAsBcDevComment -ObjectPath NakCore:/ -Recurse -Verbose
+| Set-XliffTranslationAsBcDevComment -ObjectPath NakCore:/src/ -Recurse -Verbose
 
 # Note that the table name contains ' - ', which is also the element separator in the context string
 # New-XliffTranslation -TargetLanguage nl-NL -Target 'My Translation' -RawContext 'Table SP - Appl. Multi-drop Exc. - Field Customer Id - Property Caption'

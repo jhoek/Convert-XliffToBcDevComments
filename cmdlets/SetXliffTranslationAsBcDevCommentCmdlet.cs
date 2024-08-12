@@ -41,23 +41,30 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
             .Where(t => t.TargetLanguage != Facts.BaseLanguage)
             .Where(t => IncludeState.Contains(t.TargetState ?? TranslationState.Translated));
 
-        if (!translations.Any())
-            return;
+        WriteVerbose($"{translations.Count()} translation found.");
 
-        var objects = ObjectFilePaths
+        var compilationUnits = ObjectFilePaths
             .Select(p => new
             {
                 Path = p,
-                Object = SyntaxFactory.ParseSyntaxTree(File.ReadAllText(p), p).GetRoot().ChildNodes().Cast<ObjectSyntax>().SingleOrDefault()
+                CompilationUnit = SyntaxFactory.ParseSyntaxTree(File.ReadAllText(p), p).GetRoot(),
             })
-            .Where(o => o.Object is not null)
-            .Select(o => o.Object)
-            .ToList(); // FIXME: for now
+            .Select(p => new
+            {
+                p.Path,
+                p.CompilationUnit,
+                Objects = p.CompilationUnit.ChildNodes().OfType<ObjectSyntax>()
+            })
+            .ToList();
 
-        objects.Resolve(translations.First().Context.TakeWhile(c => c.Type != ContextElementType.Property).ToList(), WriteVerbose);
+        translations
+            .First() // FIXME
+            .Context
+            .FindSyntaxNodeByContext(compilationUnits.Select(c => c.CompilationUnit))
+            .WriteObject(this);
 
 
-        // WriteObject(objects.SelectMany(o => o.Object).FindFromContext(CachedTranslations.First().Context)); // etc.
+
 
         // FIXME: Loop through translations:
         // FIXME: - Find object and subobject based on translation context

@@ -1,28 +1,25 @@
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using Microsoft.Dynamics.Nav.CodeAnalysis.Syntax;
 
 namespace ConvertXliffToBcDevComments;
 
 public static class ExtensionMethods
 {
-    public static SyntaxNode Resolve(this IEnumerable<SyntaxNode> syntaxNodes, IEnumerable<ContextElement> contextElements, Action<string> writeVerbose = null)
+    public static SyntaxNode FindSyntaxNodeByContext(this IEnumerable<ContextElement> contextElements, SyntaxNode context)
     {
-        writeVerbose?.Invoke($"Looking for a {contextElements.First().Type} with name {contextElements.First().Name} in an enumerable of {syntaxNodes.Count()} syntax nodes.");
-
-        switch (contextElements.First().Type)
+        SyntaxNode newContext = contextElements.First().Type switch
         {
-            case ContextElementType.Table:
-                var table = syntaxNodes.OfType<TableSyntax>().Where(t => t.Name.Identifier.ValueText.Matches(contextElements.First().Name));
-                return table.Resolve(contextElements.Skip(1));
-            case ContextElementType.Field:
-                var field = syntaxNodes.OfType<FieldSyntax>().Where(f => f.Name.Identifier.ValueText.Matches(contextElements.First().Name));
-                return field.Resolve(contextElements.Skip(1));
-            default:
-                throw new ArgumentOutOfRangeException(nameof(contextElements), $"Don't know how to resolve a context element of type {contextElements.First().Type}");
-        }
+            ContextElementType.Table => (context as CompilationUnitSyntax).Objects.OfType<TableSyntax>().SingleOrDefault(t => t.Name.Matches(contextElements.First().Name)) ?? throw new ArgumentException(),
+            ContextElementType.Field => (context as TableSyntax).Fields.Fields.SingleOrDefault(f => f.Name.Matches(contextElements.First().Name)) ?? throw new ArgumentException(),
+
+        };
+
+        return contextElements.Skip(1).FindSyntaxNodeByContext(newContext);
     }
 
     public static bool Matches(this string value1, string value2) => value1.Equals(value2, StringComparison.InvariantCultureIgnoreCase);
+    public static bool Matches(this IdentifierNameSyntax value1, string value2) => value1.Identifier.ValueText.Matches(value2);
 
     public static SyntaxNode Resolve(this SyntaxNode syntaxNode, IEnumerable<ContextElement> contextElements, Action<string> writeVerbose = null)
     {
@@ -42,4 +39,6 @@ public static class ExtensionMethods
                 throw new ArgumentOutOfRangeException(nameof(contextElements), $"Don't know how to resolve a context element of type {contextElements.First().Type}");
         }
     }
+
+    public static void WriteObject(this object value, Cmdlet cmdlet, bool enumerateCollection = true) => cmdlet.WriteObject(value, enumerateCollection);
 }
