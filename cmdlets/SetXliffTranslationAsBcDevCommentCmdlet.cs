@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Frozen;
+using Microsoft.Dynamics.Nav.CodeAnalysis.InternalSyntax;
 using Microsoft.Dynamics.Nav.CodeAnalysis.Syntax;
 
 namespace ConvertXliffToBcDevComments;
 
 [Cmdlet(VerbsCommon.Set, "XliffTranslationAsBcDevComment")]
+[OutputType(typeof(FileInfo))]
 public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
 {
     public class SetXliffTranslationAsBcDevCommentRewriter : SyntaxRewriter
@@ -15,14 +17,22 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
         }
 
         public IEnumerable<XliffTranslation> Translations { get; init; }
+        public Action<string> WriteVerbose { get; set; }
 
         public override SyntaxNode VisitProperty(PropertySyntax node)
         {
-            // Build context string
-            // Skip if already present and not -Force
-            // Find context string in translations
-            // Apply if found
-            // Remove from translations
+            if (node.PropertyKind().IsTranslatableProperty())
+            {
+                var translation = Translations.SingleOrDefault(t => t.RawContext.Matches(node.ContextString()));
+
+                if (translation is not null)
+                {
+                    // Parse existing commetns
+                    // Skip if already present and not -Force
+                    // Apply if found
+                    // Remove from translations
+                }
+            }
 
             return base.VisitProperty(node);
         }
@@ -42,6 +52,9 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
 
     [Parameter()]
     public SwitchParameter Force { get; set; }
+
+    [Parameter()]
+    public SwitchParameter PassThru { get; set; }
 
     protected List<XliffTranslation> CachedTranslations = [];
 
@@ -63,38 +76,19 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
             .Where(t => t.TargetLanguage != Facts.BaseLanguage)
             .Where(t => IncludeState.Contains(t.TargetState ?? TranslationState.Translated));
 
-        WriteVerbose($"{translations.Count()} translation found.");
+        translations.ToList().ForEach(t => WriteVerbose($"{t.RawContext} = {t.Target}"));
 
-        var compilationUnits = ObjectFilePaths
-            .Select(p => new
+        var rewriter = new SetXliffTranslationAsBcDevCommentRewriter(translations) { WriteVerbose = WriteVerbose };
+
+        ObjectFilePaths
+            .ToList()
+            .ForEach(p =>
             {
-                Path = p,
-                CompilationUnit = SyntaxFactory.ParseSyntaxTree(File.ReadAllText(p), p).GetRoot(),
-            })
-            .Select(p => new
-            {
-                p.Path,
-                p.CompilationUnit,
-                Objects = p.CompilationUnit.ChildNodes().OfType<ObjectSyntax>()
-            })
-            .ToList();
+                var compilationUnit = SyntaxFactory.ParseSyntaxTree(File.ReadAllText(p), p).GetRoot();
+                compilationUnit = rewriter.Visit(compilationUnit);
+                File.WriteAllText(p, compilationUnit.ToFullString());
 
-        compilationUnits.SelectMany(c => c.Objects).ToList().ForEach(o => WriteVerbose(o.Name.Identifier.ValueText));
-
-        translations
-            .First() // FIXME
-            .Context
-            .FindSyntaxNodeByContext(compilationUnits.Select(c => c.CompilationUnit))
-            .WriteObject(this);
-
-
-
-
-        // FIXME: Loop through translations:
-        // FIXME: - Find object and subobject based on translation context
-        // FIXME: - Apply translation if missing or -Force, warn if context not found
-        // FIXME: Write dirty objects
+                if (PassThru) WriteObject(new FileInfo(p));
+            });
     }
-
-
 }
