@@ -4,6 +4,12 @@ namespace ConvertXliffToBcDevComments;
 
 public class DeveloperComment
 {
+    public DeveloperComment(string languageCode, string value)
+    {
+        LanguageCode = languageCode;
+        Value = value;
+    }
+
     public DeveloperComment(string source)
     {
         if (source.Contains("="))
@@ -19,8 +25,8 @@ public class DeveloperComment
         }
     }
 
-    public string LanguageCode { get; init; }
-    public required string Value { get; init; }
+    public string LanguageCode { get; }
+    public string Value { get; }
 
     public override string ToString()
     {
@@ -32,32 +38,34 @@ public class DeveloperComments : IEnumerable<DeveloperComment>
 {
     protected List<DeveloperComment> innerList = new List<DeveloperComment>();
 
-    public DeveloperComments(string source, string separator = "|")
-    {
-        innerList.AddRange(source.Split(separator));
-    }
+    public bool ContainsLanguageCode(string languageCode) =>
+        innerList.Any(c => c.LanguageCode.Matches(languageCode));
+
+    public DeveloperComments(string source, string separator = "|") =>
+        innerList
+            .AddRange(
+                source
+                    .Split(separator)
+                    .Select(c => new DeveloperComment(c))
+            );
 
     public string Get(string languageCode) =>
-        this
-            .Single(c => c.StartsWith(languageCode))
-            .Split("=")
-            .Skip(1)
-            .FirstOrDefault();
+        this.Single(c => c.LanguageCode.Matches(languageCode)).Value;
 
-    public IEnumerator<DeveloperComment> GetEnumerator()
+    public IEnumerator<DeveloperComment> GetEnumerator() =>
+        innerList.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() =>
+        innerList.GetEnumerator();
+
+    public void Set(string languageCode, string value)
     {
-        throw new NotImplementedException();
+        innerList.RemoveAll(c => c.LanguageCode.Matches(languageCode));
+        innerList.Add(new DeveloperComment(languageCode, value));
     }
-
-    public string Set(string languageCode) { }
 
     public override string ToString()
     {
         return base.ToString();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        throw new NotImplementedException();
     }
 }

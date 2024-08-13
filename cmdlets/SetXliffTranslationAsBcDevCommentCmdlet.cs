@@ -17,6 +17,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
         }
 
         public IEnumerable<XliffTranslation> Translations { get; init; }
+        public SwitchParameter Force { get; set; }
         public Action<string> WriteVerbose { get; set; }
 
         public override SyntaxNode VisitProperty(PropertySyntax node)
@@ -27,8 +28,17 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
 
                 if (translation is not null)
                 {
-                    // Parse existing commetns
-                    // Skip if already present and not -Force
+                    var propertyValue = node.Value as LabelPropertyValueSyntax;
+                    var commentsProperty = propertyValue.Value.Properties.Values.SingleOrDefault(v => v.Identifier.ValueText.Matches("Comment"))?.Literal.ToFullString();
+                    var developerComments = new DeveloperComments(commentsProperty);
+                    var shouldSet = !developerComments.ContainsLanguageCode(translation.TargetLanguage) || Force;
+
+                    if (shouldSet)
+                    {
+                        developerComments.Set(translation.TargetLanguage, translation.Target);
+                        node = node.WithValue()
+                    }
+
                     // Apply if found
                     // Remove from translations
                 }
