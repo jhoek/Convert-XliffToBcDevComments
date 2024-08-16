@@ -3,14 +3,14 @@
 # | Select-Object -First 10000 -Property RawContext, Context, @{n = 'RawCount'; e = { ($_.RawContext.ToCharArray() | Where-Object { $_ -eq '-' }).length }}, @{ n = 'normalcount'; e = { ($_.Context).Count } }
 # | Where-Object { ($_.RawCount + 1) -ne $_.NormalCount }
 
-$Translations = @(
-    (New-XliffTranslation -TargetLanguage nl-NL -Target 'Mijn veld' -RawContext 'Table My Table - Field My Field - Property Caption'),
-    (New-XliffTranslation -TargetLanguage nl-NL -Target 'Mijn andere veld' -RawContext 'Table My Table - Field My Other Field - Property Caption')
-    (New-XliffTranslation -TargetLanguage nl-NL -Target 'Reeds vertaald veldje' -RawContext 'Table My Table - Field Already TranslatedField - Property Caption')
-    (New-XliffTranslation -TargetLanguage nl-NL -Target 'Vertaald in andere taal' -RawContext 'Table My Table - Field Translated in Other Language - Property Caption')
-)
+# $Translations = @(
+#     (New-XliffTranslation -TargetLanguage nl-NL -Target 'Mijn veld' -RawContext 'Table My Table - Field My Field - Property Caption'),
+#     (New-XliffTranslation -TargetLanguage nl-NL -Target 'Mijn andere veld' -RawContext 'Table My Table - Field My Other Field - Property Caption')
+#     (New-XliffTranslation -TargetLanguage nl-NL -Target 'Reeds vertaald veldje' -RawContext 'Table My Table - Field Already TranslatedField - Property Caption')
+#     (New-XliffTranslation -TargetLanguage nl-NL -Target 'Vertaald in andere taal' -RawContext 'Table My Table - Field Translated in Other Language - Property Caption')
+# )
 
-$Translations | Set-XliffTranslationAsBcDevComment -ObjectPath ./test.al -Recurse -Verbose
+# $Translations | Set-XliffTranslationAsBcDevComment -ObjectPath ./test.al -Recurse -Verbose
 
 ''
 
