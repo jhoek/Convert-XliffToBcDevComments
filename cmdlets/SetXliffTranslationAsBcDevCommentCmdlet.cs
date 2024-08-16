@@ -28,15 +28,30 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
 
                 if (translation is not null)
                 {
-                    var propertyValue = node.Value as LabelPropertyValueSyntax;
-                    var commentsProperty = propertyValue.Value.Properties.Values.SingleOrDefault(v => v.Identifier.ValueText.Matches("Comment"))?.Literal.ToFullString();
-                    var developerComments = new DeveloperComments(commentsProperty);
+                    var oldPropertyValueSyntax = node.Value as LabelPropertyValueSyntax;
+                    var oldLabelSyntax = oldPropertyValueSyntax.Value;
+                    var oldLabelPropertyValueProperties = oldLabelSyntax.Properties;
+                    var oldLabelPropertyValues = oldLabelPropertyValueProperties.Values;
+                    var oldCommentsProperty = oldLabelPropertyValues.SingleOrDefault(v => v.Identifier.ValueText.Matches("Comment"));
+                    var oldOtherProperties = oldLabelPropertyValues.Where(v => !v.Identifier.ValueText.Matches("Comment"));
+                    var oldCommentsPropertyValue = oldCommentsProperty?.Literal.ToFullString();
+
+                    var developerComments = new DeveloperComments(oldCommentsPropertyValue);
                     var shouldSet = !developerComments.ContainsLanguageCode(translation.TargetLanguage) || Force;
 
                     if (shouldSet)
                     {
                         developerComments.Set(translation.TargetLanguage, translation.Target);
-                        node = node.WithValue()
+                        var newCommentsPropertyValue = developerComments.ToString();
+                        var newCommentsProperty = SyntaxFactory.IdentifierEqualsLiteral("Comment", SyntaxFactory.StringLiteralValue(SyntaxFactory.Literal(newCommentsPropertyValue)));
+                        var newLabelPropertyValues = new SeparatedSyntaxList<IdentifierEqualsLiteralSyntax>().AddRange(oldOtherProperties.Prepend(newCommentsProperty));
+
+
+                        newLabelSyntax =
+                        newPropertyValueSyntax = SyntaxFactory.LabelPropertyValue(newLabelSyntax);
+
+                        node = SyntaxFactory.Property(node.Name, newPropertyValueSyntax);
+                        )
                     }
 
                     // Apply if found
