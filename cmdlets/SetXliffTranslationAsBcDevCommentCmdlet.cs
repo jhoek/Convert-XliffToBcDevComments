@@ -48,6 +48,9 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
 
                     WriteVerbose($"VisitProperty: Target language {translation.TargetLanguage} already present: {languageAlreadyPresent}; Force: {Force}");
 
+                    // FIXME: Verbruikte vertalingen verwijderen uit XLIFF?
+                    // FIXME: Ook Named types verwerken in rewriter
+
                     if (shouldSet)
                     {
                         WriteVerbose($"VisitProperty: Comment property should be set (translation was missing or -Force was specified)");
