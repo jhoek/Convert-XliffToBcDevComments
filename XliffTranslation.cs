@@ -8,5 +8,5 @@ public class XliffTranslation
     public required string Source { get; init; }
     public required string Target { get; init; }
     public TranslationState? TargetState { get; init; }
-    public required string RawContext { get; init; }
+    public required string Context { get; init; }
 }

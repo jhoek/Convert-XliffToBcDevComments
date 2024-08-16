@@ -29,7 +29,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                 var contextString = node.ContextString();
                 WriteVerbose($"VisitProperty: Context string is {contextString}");
 
-                var translation = Translations.SingleOrDefault(t => t.RawContext.Matches(contextString));
+                var translation = Translations.SingleOrDefault(t => t.Context.Matches(contextString));
 
                 if (translation is not null)
                 {
@@ -117,8 +117,6 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
         var translations = CachedTranslations
             .Where(t => t.TargetLanguage != Facts.BaseLanguage)
             .Where(t => IncludeState.Contains(t.TargetState ?? TranslationState.Translated));
-
-        // translations.ToList().ForEach(t => WriteVerbose($"{t.RawContext} = {t.Target}"));
 
         var rewriter = new SetXliffTranslationAsBcDevCommentRewriter(translations)
         {

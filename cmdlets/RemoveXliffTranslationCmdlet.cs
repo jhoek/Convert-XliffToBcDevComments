@@ -53,18 +53,18 @@ public class RemoveXliffTranslationCmdlet : PSCmdlet
             .SingleOrDefault(u => u
                 .Elements(@namespace + "note")
                 .Where(n => n.Attribute("from").Value == "Xliff Generator")
-                .Where(n => n.Value == translation.RawContext)
+                .Where(n => n.Value == translation.Context)
                 .Any()
             );
 
         if (translationUnit is null)
         {
-            WriteVerbose($"A translation-unit could not be found for translation {translation.RawContext}.");
+            WriteVerbose($"A translation-unit could not be found for translation {translation.Context}.");
             return false;
         }
 
         translationUnit.Remove();
-        WriteVerbose($"A translation-unit for translation {translation.RawContext} was found and removed.");
+        WriteVerbose($"A translation-unit for translation {translation.Context} was found and removed.");
 
         return true;
     }
