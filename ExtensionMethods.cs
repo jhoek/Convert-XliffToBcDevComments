@@ -50,5 +50,5 @@ public static class ExtensionMethods
     public static void WriteObject(this object value, Cmdlet cmdlet, bool enumerateCollection = true) => cmdlet.WriteObject(value, enumerateCollection);
 
     public static PropertyKind PropertyKind(this PropertySyntax propertySyntax) =>
-        Enum.Parse<PropertyKind>(propertySyntax.Name.Identifier.ValueText);
+        Enum.Parse<PropertyKind>(propertySyntax.Name.Identifier.ValueText, true);
 }
