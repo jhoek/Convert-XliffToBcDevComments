@@ -59,7 +59,8 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                             SyntaxFactory
                                 .Property(node.Name, newPropertyValueSyntax)
                                 .NormalizeWhiteSpace()
-                                .WithLeadingTrivia(node.Parent.GetLeadingTrivia());
+                                .WithLeadingTrivia(node.Parent.GetLeadingTrivia())
+                                .WithTrailingTrivia(SyntaxFactory.CarriageReturnLinefeed);
                     }
                 }
             }
