@@ -24,6 +24,8 @@ public class RemoveXliffTranslationCmdlet : PSCmdlet
 
     protected override void EndProcessing()
     {
+        WriteVerbose($"Received {CachedTranslations.Count} translations to try and remove from the XLIFF file.");
+
         CachedTranslations
             .GroupBy(t => t.XliffPath)
             .ToList()
@@ -53,9 +55,13 @@ public class RemoveXliffTranslationCmdlet : PSCmdlet
             );
 
         if (translationUnit is null)
+        {
+            WriteVerbose($"A translation-unit could not be found for translation {translation.RawContext}.");
             return false;
+        }
 
         translationUnit.Remove();
+        WriteVerbose($"A translation-unit for translation {translation.RawContext} was found and removed.");
 
         return true;
     }
