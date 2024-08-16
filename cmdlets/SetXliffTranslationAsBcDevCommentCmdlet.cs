@@ -43,7 +43,12 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                     var oldCommentsPropertyValue = oldCommentsProperty?.Literal.ToFullString().UnquoteLiteral();
 
                     var developerComments = new DeveloperComments(oldCommentsPropertyValue);
-                    var shouldSet = (!developerComments.ContainsLanguageCode(translation.TargetLanguage)) || Force;
+                    var shouldSet = !developerComments.ContainsLanguageCode(translation.TargetLanguage);
+
+                    if (Force)
+                    {
+                        shouldSet = true;
+                    }
 
                     if (shouldSet)
                     {
