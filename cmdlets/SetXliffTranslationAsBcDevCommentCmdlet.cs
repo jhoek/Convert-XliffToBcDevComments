@@ -45,15 +45,21 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
 
                     if (shouldSet)
                     {
+                        WriteVerbose($"VisitProperty: Comment property should be set (translation was missing or -Force was specified)");
+
                         developerComments.Set(translation.TargetLanguage, translation.Target);
                         var newCommentsPropertyValue = developerComments.ToString();
                         var newCommentsProperty = SyntaxFactory.IdentifierEqualsLiteral("Comment", SyntaxFactory.StringLiteralValue(SyntaxFactory.Literal(newCommentsPropertyValue)));
                         var newLabelPropertyValues = new SeparatedSyntaxList<IdentifierEqualsLiteralSyntax>().AddRange(oldOtherProperties.Prepend(newCommentsProperty));
                         var newLabelPropertyValueProperties = SyntaxFactory.CommaSeparatedIdentifierEqualsLiteralList(newLabelPropertyValues);
-                        var newLabelSyntax = SyntaxFactory.Label(oldLabelSyntax.LabelText, newLabelPropertyValueProperties);
+                        var newLabelSyntax = SyntaxFactory.Label(oldLabelSyntax.LabelText, SyntaxFactory.Token(SyntaxKind.CommaToken), newLabelPropertyValueProperties);
                         var newPropertyValueSyntax = SyntaxFactory.LabelPropertyValue(newLabelSyntax);
 
-                        node = SyntaxFactory.Property(node.Name, newPropertyValueSyntax).NormalizeWhiteSpace();
+                        node =
+                            SyntaxFactory
+                                .Property(node.Name, newPropertyValueSyntax)
+                                .NormalizeWhiteSpace()
+                                .WithLeadingTrivia(node.Parent.GetLeadingTrivia());
                     }
                 }
             }
