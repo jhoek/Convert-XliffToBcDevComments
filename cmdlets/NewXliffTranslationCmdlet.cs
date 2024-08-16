@@ -12,7 +12,7 @@ public class NewXliffTranslationCmdlet : Cmdlet
     [Parameter()] public string Source { get; set; }
     [Parameter(Mandatory = true)] public string Target { get; set; }
     [Parameter()] public TranslationState? TargetState { get; set; }
-    [Parameter(Mandatory = true)] public string RawContext { get; set; }
+    [Parameter(Mandatory = true)] public string RawContext { get; set; } // FIXME: Wordt: Context
 
     protected override void EndProcessing()
     {
