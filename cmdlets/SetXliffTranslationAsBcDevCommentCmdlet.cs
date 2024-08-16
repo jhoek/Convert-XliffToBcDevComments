@@ -7,7 +7,7 @@ using Microsoft.Dynamics.Nav.CodeAnalysis.Utilities;
 namespace ConvertXliffToBcDevComments;
 
 [Cmdlet(VerbsCommon.Set, "XliffTranslationAsBcDevComment")]
-[OutputType(typeof(FileInfo))]
+[OutputType(typeof(XliffTranslation))]
 public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
 {
     public class SetXliffTranslationAsBcDevCommentRewriter : SyntaxRewriter
@@ -20,6 +20,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
         public IEnumerable<XliffTranslation> Translations { get; init; }
         public SwitchParameter Force { get; set; }
         public Action<string> WriteVerbose { get; set; }
+        public Action<XliffTranslation> WriteProcessedTranslation { get; set; }
 
         public override SyntaxNode VisitProperty(PropertySyntax node)
         {
@@ -69,6 +70,8 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                                 .NormalizeWhiteSpace()
                                 .WithLeadingTrivia(node.Parent.GetLeadingTrivia())
                                 .WithTrailingTrivia(SyntaxFactory.CarriageReturnLinefeed);
+
+                        WriteProcessedTranslation?.Invoke(translation);
                     }
                 }
             }
@@ -123,6 +126,8 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
             Force = Force
         };
 
+        if (PassThru) rewriter.WriteProcessedTranslation = WriteObject;
+
         ObjectFilePaths
             .ToList()
             .ForEach(p =>
@@ -130,8 +135,6 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                 var compilationUnit = SyntaxFactory.ParseSyntaxTree(File.ReadAllText(p), p).GetRoot();
                 compilationUnit = rewriter.Visit(compilationUnit);
                 File.WriteAllText(p, compilationUnit.ToFullString());
-
-                if (PassThru) WriteObject(new FileInfo(p));
             });
     }
 }

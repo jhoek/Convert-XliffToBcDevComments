@@ -19,7 +19,7 @@ table 50100 "My Table"
 
         field(4; "Force Retranslate Field"; Integer)
         {
-            Caption = 'Force Retranslate Field', Comment = 'nl-NL = Forceer hervertaling';
+            Caption = 'Force Retranslate Field', Comment = 'nl-NL=Forceer hervertaling!!!';
         }
 
         field(5; "Translated in Other Language"; Integer)
