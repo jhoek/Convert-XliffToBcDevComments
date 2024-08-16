@@ -53,7 +53,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                         var newLabelSyntax = SyntaxFactory.Label(oldLabelSyntax.LabelText, newLabelPropertyValueProperties);
                         var newPropertyValueSyntax = SyntaxFactory.LabelPropertyValue(newLabelSyntax);
 
-                        node = SyntaxFactory.Property(node.Name, newPropertyValueSyntax);
+                        node = SyntaxFactory.Property(node.Name, newPropertyValueSyntax).NormalizeWhiteSpace();
                     }
                 }
             }

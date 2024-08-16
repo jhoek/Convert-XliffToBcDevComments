@@ -69,8 +69,6 @@ public class DeveloperComments : IEnumerable<DeveloperComment>
         innerList.Add(new DeveloperComment(languageCode, value));
     }
 
-    public override string ToString()
-    {
-        return base.ToString();
-    }
+    public override string ToString() =>
+        string.Join(", ", innerList);
 }
