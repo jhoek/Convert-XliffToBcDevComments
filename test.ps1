@@ -12,6 +12,8 @@ $Translations = @(
 
 $Translations | Set-XliffTranslationAsBcDevComment -ObjectPath ./test.al -Recurse -Verbose
 
+''
+
 New-XliffTranslation -TargetLanguage nl-NL -Target 'Forceer hervertaling!!!' -RawContext 'Table My Table - Field Force Retranslate Field - Property Caption' |
     Set-XliffTranslationAsBcDevComment -ObjectPath ./test.al -Force -Recurse -Verbose
 

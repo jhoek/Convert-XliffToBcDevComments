@@ -32,7 +32,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
 
                 if (translation is not null)
                 {
-                    WriteVerbose($"VisitProperty: Translation is {translation.Target}");
+                    WriteVerbose($"VisitProperty: Found translation '{translation.Target}'");
 
                     var oldPropertyValueSyntax = node.Value as LabelPropertyValueSyntax;
                     var oldLabelSyntax = oldPropertyValueSyntax.Value;
@@ -43,7 +43,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                     var oldCommentsPropertyValue = oldCommentsProperty?.Literal.ToFullString().UnquoteLiteral();
 
                     var developerComments = new DeveloperComments(oldCommentsPropertyValue);
-                    var shouldSet = !developerComments.ContainsLanguageCode(translation.TargetLanguage) || Force;
+                    var shouldSet = (!developerComments.ContainsLanguageCode(translation.TargetLanguage)) || Force;
 
                     if (shouldSet)
                     {
@@ -109,7 +109,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
             .Where(t => t.TargetLanguage != Facts.BaseLanguage)
             .Where(t => IncludeState.Contains(t.TargetState ?? TranslationState.Translated));
 
-        translations.ToList().ForEach(t => WriteVerbose($"{t.RawContext} = {t.Target}"));
+        // translations.ToList().ForEach(t => WriteVerbose($"{t.RawContext} = {t.Target}"));
 
         var rewriter = new SetXliffTranslationAsBcDevCommentRewriter(translations) { WriteVerbose = WriteVerbose };
 
