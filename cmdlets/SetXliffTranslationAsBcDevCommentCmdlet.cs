@@ -28,10 +28,11 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                 WriteVerbose($"VisitProperty: Context string is {contextString}");
 
                 var translation = Translations.SingleOrDefault(t => t.RawContext.Matches(contextString));
-                WriteVerbose($"VisitProperty: Translation is {translation.Target}");
 
                 if (translation is not null)
                 {
+                    WriteVerbose($"VisitProperty: Translation is {translation.Target}");
+
                     var oldPropertyValueSyntax = node.Value as LabelPropertyValueSyntax;
                     var oldLabelSyntax = oldPropertyValueSyntax.Value;
                     var oldLabelPropertyValueProperties = oldLabelSyntax.Properties;
