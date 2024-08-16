@@ -45,17 +45,12 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                         var newCommentsPropertyValue = developerComments.ToString();
                         var newCommentsProperty = SyntaxFactory.IdentifierEqualsLiteral("Comment", SyntaxFactory.StringLiteralValue(SyntaxFactory.Literal(newCommentsPropertyValue)));
                         var newLabelPropertyValues = new SeparatedSyntaxList<IdentifierEqualsLiteralSyntax>().AddRange(oldOtherProperties.Prepend(newCommentsProperty));
-
-
-                        newLabelSyntax =
-                        newPropertyValueSyntax = SyntaxFactory.LabelPropertyValue(newLabelSyntax);
+                        var newLabelPropertyValueProperties = SyntaxFactory.CommaSeparatedIdentifierEqualsLiteralList(newLabelPropertyValues);
+                        var newLabelSyntax = SyntaxFactory.Label(oldLabelSyntax.LabelText, newLabelPropertyValueProperties);
+                        var newPropertyValueSyntax = SyntaxFactory.LabelPropertyValue(newLabelSyntax);
 
                         node = SyntaxFactory.Property(node.Name, newPropertyValueSyntax);
-                        )
                     }
-
-                    // Apply if found
-                    // Remove from translations
                 }
             }
 
