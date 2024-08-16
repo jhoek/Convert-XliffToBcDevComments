@@ -42,7 +42,10 @@ public class RemoveXliffTranslationCmdlet : PSCmdlet
     }
 
     protected bool ProcessTranslations(IEnumerable<XliffTranslation> translations, IEnumerable<XElement> translationUnits) =>
-        translations.Any(t => ProcessTranslation(t, translationUnits));
+        translations
+            .Where(t => ProcessTranslation(t, translationUnits))
+            .ToList()
+            .Any();
 
     protected bool ProcessTranslation(XliffTranslation translation, IEnumerable<XElement> translationUnits)
     {
