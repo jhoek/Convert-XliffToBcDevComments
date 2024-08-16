@@ -43,12 +43,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                     var oldCommentsPropertyValue = oldCommentsProperty?.Literal.ToFullString().UnquoteLiteral();
 
                     var developerComments = new DeveloperComments(oldCommentsPropertyValue);
-                    var shouldSet = !developerComments.ContainsLanguageCode(translation.TargetLanguage);
-
-                    if (Force)
-                    {
-                        shouldSet = true;
-                    }
+                    var shouldSet = !developerComments.ContainsLanguageCode(translation.TargetLanguage) || Force;
 
                     if (shouldSet)
                     {
@@ -116,7 +111,11 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
 
         // translations.ToList().ForEach(t => WriteVerbose($"{t.RawContext} = {t.Target}"));
 
-        var rewriter = new SetXliffTranslationAsBcDevCommentRewriter(translations) { WriteVerbose = WriteVerbose };
+        var rewriter = new SetXliffTranslationAsBcDevCommentRewriter(translations)
+        {
+            WriteVerbose = WriteVerbose,
+            Force = Force
+        };
 
         ObjectFilePaths
             .ToList()
