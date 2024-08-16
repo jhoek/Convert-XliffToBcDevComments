@@ -24,14 +24,18 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
         {
             if (node.PropertyKind().IsTranslatableProperty())
             {
-                var translation = Translations.SingleOrDefault(t => t.RawContext.Matches(node.ContextString()));
+                var contextString = node.ContextString();
+                WriteVerbose($"VisitProperty: Context string is {contextString}");
+
+                var translation = Translations.SingleOrDefault(t => t.RawContext.Matches(contextString));
+                WriteVerbose($"VisitProperty: Translation is {translation.Target}");
 
                 if (translation is not null)
                 {
                     var oldPropertyValueSyntax = node.Value as LabelPropertyValueSyntax;
                     var oldLabelSyntax = oldPropertyValueSyntax.Value;
                     var oldLabelPropertyValueProperties = oldLabelSyntax.Properties;
-                    var oldLabelPropertyValues = oldLabelPropertyValueProperties.Values;
+                    var oldLabelPropertyValues = oldLabelPropertyValueProperties?.Values ?? new SeparatedSyntaxList<IdentifierEqualsLiteralSyntax>();
                     var oldCommentsProperty = oldLabelPropertyValues.SingleOrDefault(v => v.Identifier.ValueText.Matches("Comment"));
                     var oldOtherProperties = oldLabelPropertyValues.Where(v => !v.Identifier.ValueText.Matches("Comment"));
                     var oldCommentsPropertyValue = oldCommentsProperty?.Literal.ToFullString();

@@ -38,16 +38,21 @@ public class DeveloperComments : IEnumerable<DeveloperComment>
 {
     protected List<DeveloperComment> innerList = new List<DeveloperComment>();
 
-    public bool ContainsLanguageCode(string languageCode) =>
-        innerList.Any(c => c.LanguageCode.Matches(languageCode));
+    public DeveloperComments(string source, string separator = "|")
+    {
+        if (source is null)
+            return;
 
-    public DeveloperComments(string source, string separator = "|") =>
         innerList
             .AddRange(
-                source
+                (source)
                     .Split(separator)
                     .Select(c => new DeveloperComment(c))
             );
+    }
+
+    public bool ContainsLanguageCode(string languageCode) =>
+        innerList.Any(c => c.LanguageCode.Matches(languageCode));
 
     public string Get(string languageCode) =>
         this.Single(c => c.LanguageCode.Matches(languageCode)).Value;
