@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Frozen;
 using Microsoft.Dynamics.Nav.CodeAnalysis.InternalSyntax;
 using Microsoft.Dynamics.Nav.CodeAnalysis.Syntax;
+using Microsoft.Dynamics.Nav.CodeAnalysis.Utilities;
 
 namespace ConvertXliffToBcDevComments;
 
@@ -39,7 +40,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                     var oldLabelPropertyValues = oldLabelPropertyValueProperties?.Values ?? new SeparatedSyntaxList<IdentifierEqualsLiteralSyntax>();
                     var oldCommentsProperty = oldLabelPropertyValues.SingleOrDefault(v => v.Identifier.ValueText.Matches("Comment"));
                     var oldOtherProperties = oldLabelPropertyValues.Where(v => !v.Identifier.ValueText.Matches("Comment"));
-                    var oldCommentsPropertyValue = oldCommentsProperty?.Literal.ToFullString();
+                    var oldCommentsPropertyValue = oldCommentsProperty?.Literal.ToFullString().UnquoteLiteral();
 
                     var developerComments = new DeveloperComments(oldCommentsPropertyValue);
                     var shouldSet = !developerComments.ContainsLanguageCode(translation.TargetLanguage) || Force;

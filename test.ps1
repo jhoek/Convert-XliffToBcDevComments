@@ -12,6 +12,9 @@ $Translations = @(
 
 $Translations | Set-XliffTranslationAsBcDevComment -ObjectPath ./test.al -Recurse -Verbose
 
+New-XliffTranslation -TargetLanguage nl-NL -Target 'Forceer hervertaling!!!' -RawContext 'Table My Table - Field Force Retranslate Field - Property Caption' |
+    Set-XliffTranslationAsBcDevComment -ObjectPath ./test.al -Force -Recurse -Verbose
+
 # Note that the table name contains ' - ', which is also the element separator in the context string
 # New-XliffTranslation -TargetLanguage nl-NL -Target 'My Translation' -RawContext 'Table SP - Appl. Multi-drop Exc. - Field Customer Id - Property Caption'
 # | Set-XliffTranslationAsBcDevComment -ObjectPath NakCore:/ -Recurse

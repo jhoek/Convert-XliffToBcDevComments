@@ -37,9 +37,12 @@ public class DeveloperComment
 public class DeveloperComments : IEnumerable<DeveloperComment>
 {
     protected List<DeveloperComment> innerList = new List<DeveloperComment>();
+    public string Separator { get; init; }
 
     public DeveloperComments(string source, string separator = "|")
     {
+        Separator = separator;
+
         if (source is null)
             return;
 
@@ -70,5 +73,5 @@ public class DeveloperComments : IEnumerable<DeveloperComment>
     }
 
     public override string ToString() =>
-        string.Join(", ", innerList);
+        string.Join(Separator, innerList);
 }
