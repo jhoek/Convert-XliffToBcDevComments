@@ -22,6 +22,13 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
         public Action<string> WriteVerbose { get; set; }
         public Action<XliffTranslation> WriteProcessedTranslation { get; set; }
 
+        public override SyntaxNode VisitLabel(LabelSyntax node)
+        {
+            Console.WriteLine(node.LabelText.Value.ValueText);
+
+            return base.VisitLabel(node);
+        }
+
         public override SyntaxNode VisitProperty(PropertySyntax node)
         {
             if (node.PropertyKind().IsTranslatableProperty())
