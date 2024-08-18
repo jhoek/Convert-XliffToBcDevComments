@@ -66,7 +66,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
     }
 
     [Parameter(Mandatory = true, Position = 0)]
-    public string ObjectPath { get; set; }
+    public string[] ObjectPath { get; set; }
 
     [Parameter()]
     public SwitchParameter Recurse { get; set; }
@@ -89,7 +89,8 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
         Recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
     protected IEnumerable<string> ObjectFilePaths =>
-        GetResolvedProviderPathFromPSPath(ObjectPath, out _)
+        ObjectPath
+            .SelectMany(o => GetResolvedProviderPathFromPSPath(o, out _))
             .SelectMany(p => Directory.Exists(p) ? Directory.GetFiles(p, "*.al", SearchOption) : [p]);
 
     protected override void ProcessRecord()
