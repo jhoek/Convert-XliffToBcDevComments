@@ -12,12 +12,12 @@ public class NewXliffTranslationCmdlet : Cmdlet
     [Parameter()] public string Source { get; set; }
     [Parameter(Mandatory = true)] public string Target { get; set; }
     [Parameter()] public TranslationState? TargetState { get; set; }
-    [Parameter(Mandatory = true)] public string RawContext { get; set; }
+    [Parameter(Mandatory = true)] public string Context { get; set; }
 
     protected override void EndProcessing()
     {
         WriteObject(
-            new XliffTranslation(RawContext)
+            new XliffTranslation()
             {
                 XliffPath = XliffPath,
                 SourceLanguage = SourceLanguage,
@@ -25,6 +25,7 @@ public class NewXliffTranslationCmdlet : Cmdlet
                 Source = Source,
                 Target = Target,
                 TargetState = TargetState,
+                Context = Context
             }
         );
     }

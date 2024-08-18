@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Management.Automation.Language;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using Microsoft.Dynamics.Nav.CodeAnalysis.Syntax;
@@ -7,28 +8,53 @@ namespace ConvertXliffToBcDevComments;
 
 public static class ExtensionMethods
 {
-    public static IEnumerable<SyntaxNode> FindSyntaxNodeByContext(this IEnumerable<ContextElement> contextElements, IEnumerable<SyntaxNode> syntaxNodes) =>
-        syntaxNodes.Select(n => contextElements.FindSyntaxNodeByContext(n));
+    public static T As<T>(this object value) =>
+        (T)value;
 
-    public static SyntaxNode FindSyntaxNodeByContext(this IEnumerable<ContextElement> contextElements, SyntaxNode context)
+    public static string ContextString(this SyntaxNode syntaxNode) =>
+        syntaxNode
+            .ContextStringElements()
+            .Reverse()
+            .JoinString(" - ");
+
+    private static IEnumerable<string> ContextStringElements(this SyntaxNode syntaxNode)
     {
+        var currentSyntaxNode = syntaxNode;
 
-
-        SyntaxNode newContext = contextElements.First().Type switch
+        while (true)
         {
-            ContextElementType.Table => (context as CompilationUnitSyntax).Objects.OfType<TableSyntax>().SingleOrDefault(t => t.Name.Unquoted().Matches(contextElements.First().Name)) ?? throw new ArgumentException($"Couldn't find table {contextElements.First().Name}"),
-            ContextElementType.Field => (context as TableSyntax).Fields.Fields.SingleOrDefault(f => f.Name.Unquoted().Matches(contextElements.First().Name)) ?? throw new ArgumentException($"Couldn't find field {contextElements.First().Name}"),
-            ContextElementType.Property => null,
-            _ => throw new ArgumentException(contextElements.First().Type.ToString())
-        };
+            switch (currentSyntaxNode)
+            {
+                case var n when n.Kind.IsObject():
+                    yield return $"{currentSyntaxNode.Kind.ToString().RegexReplace("Object$", "")} {currentSyntaxNode.GetNameStringValue()}";
+                    yield break;
+                case var n when n.Kind == SyntaxKind.Field:
+                    yield return $"{currentSyntaxNode.Kind} {currentSyntaxNode.GetNameStringValue()}";
+                    break;
+                case var n when n.Kind == SyntaxKind.Property:
+                    yield return $"{currentSyntaxNode.Kind} {currentSyntaxNode.As<PropertySyntax>().Name.Identifier.ValueText}";
+                    break;
+                case var n when n.Kind == SyntaxKind.VariableDeclaration:
+                    yield return $"NamedType {currentSyntaxNode.As<VariableDeclarationSyntax>().Name.Identifier.ValueText}";
+                    break;
+                case var n when n.Kind == SyntaxKind.MethodDeclaration:
+                    yield return $"Method {currentSyntaxNode.As<MethodDeclarationSyntax>().Name.Identifier.ValueText}";
+                    break;
+            }
 
-        if (newContext != null)
-            return contextElements.Skip(1).FindSyntaxNodeByContext(newContext);
-        else
-            return null;
+            currentSyntaxNode = currentSyntaxNode.Parent;
+        }
     }
+
+    public static string RegexReplace(this string input, string pattern, string replacement) =>
+        Regex.Replace(input, pattern, replacement);
+
+    private static string JoinString(this IEnumerable<string> strings, string separator) => string.Join(separator, strings);
 
     public static bool Matches(this string value1, string value2) => value1.Equals(value2, StringComparison.InvariantCultureIgnoreCase);
     public static bool Matches(this IdentifierNameSyntax value1, string value2) => value1.Identifier.ValueText.Matches(value2);
     public static void WriteObject(this object value, Cmdlet cmdlet, bool enumerateCollection = true) => cmdlet.WriteObject(value, enumerateCollection);
+
+    public static PropertyKind PropertyKind(this PropertySyntax propertySyntax) =>
+        Enum.Parse<PropertyKind>(propertySyntax.Name.Identifier.ValueText, true);
 }
