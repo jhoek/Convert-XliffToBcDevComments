@@ -23,11 +23,15 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
         public Action<string> WriteVerbose { get; set; }
         public Action<XliffTranslation> WriteProcessedTranslation { get; set; }
 
+        public override SyntaxNode VisitLabel(LabelSyntax node)
+        {
+            Console.WriteLine($"VisitLabel: {node.ContextString()}"); // FIXME
+            return base.VisitLabel(node);
+        }
+
         public override SyntaxNode VisitLabelDataType(LabelDataTypeSyntax node)
         {
-            Console.WriteLine(node.Label.LabelText.Value.ValueText);
-            Console.WriteLine(node.ContextString());
-
+            Console.WriteLine($"VisitLabelDataType: {node.ContextString()}"); // FIXME
             return base.VisitLabelDataType(node);
         }
 
