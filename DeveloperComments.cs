@@ -55,7 +55,7 @@ public class DeveloperComments : IEnumerable<DeveloperComment>
     }
 
     public bool ContainsLanguageCode(string languageCode) =>
-        innerList.Any(c => c.LanguageCode.Matches(languageCode));
+        innerList.Any(c => (c.LanguageCode ?? "").Matches(languageCode));
 
     public string Get(string languageCode) =>
         this.Single(c => c.LanguageCode.Matches(languageCode)).Value;
