@@ -19,7 +19,8 @@
 
 
 Get-XliffTranslation -Path 'NakCore:/Translations/Naktuinbouw Extension.nl-NL.xlf'
-| Set-XliffTranslationAsBcDevComment -ObjectPath NakCore:/src/table/ApplicationCountry.table.al, NakCore:/src/table/ActiezinnenPerSoort.table.al -Recurse -PassThru
+# | Set-XliffTranslationAsBcDevComment -ObjectPath NakCore:/src/table/ApplicationCountry.table.al, NakCore:/src/table/ActiezinnenPerSoort.table.al -Recurse -PassThru
+| Set-XliffTranslationAsBcDevComment -ObjectPath NakCore:/src/table/ActiezinnenPerSoort.table.al -Recurse -PassThru
 | Remove-XliffTranslation -Verbose
 
 # Note that the table name contains ' - ', which is also the element separator in the context string

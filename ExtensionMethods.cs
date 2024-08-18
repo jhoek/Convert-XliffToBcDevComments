@@ -34,6 +34,12 @@ public static class ExtensionMethods
                 case var n when n.Kind == SyntaxKind.Property:
                     yield return $"{currentSyntaxNode.Kind} {currentSyntaxNode.As<PropertySyntax>().Name.Identifier.ValueText}";
                     break;
+                case var n when n.Kind == SyntaxKind.VariableDeclaration:
+                    yield return $"NamedType {currentSyntaxNode.As<VariableDeclarationSyntax>().Name.Identifier.ValueText}";
+                    break;
+                case var n when n.Kind == SyntaxKind.MethodDeclaration:
+                    yield return $"Method {currentSyntaxNode.As<MethodDeclarationSyntax>().Name.Identifier.ValueText}";
+                    break;
             }
 
             currentSyntaxNode = currentSyntaxNode.Parent;

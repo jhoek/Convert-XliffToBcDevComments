@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Frozen;
+using System.Runtime.InteropServices;
 using Microsoft.Dynamics.Nav.CodeAnalysis.InternalSyntax;
 using Microsoft.Dynamics.Nav.CodeAnalysis.Syntax;
 using Microsoft.Dynamics.Nav.CodeAnalysis.Utilities;
@@ -22,11 +23,12 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
         public Action<string> WriteVerbose { get; set; }
         public Action<XliffTranslation> WriteProcessedTranslation { get; set; }
 
-        public override SyntaxNode VisitLabel(LabelSyntax node)
+        public override SyntaxNode VisitLabelDataType(LabelDataTypeSyntax node)
         {
-            Console.WriteLine(node.LabelText.Value.ValueText);
+            Console.WriteLine(node.Label.LabelText.Value.ValueText);
+            Console.WriteLine(node.ContextString());
 
-            return base.VisitLabel(node);
+            return base.VisitLabelDataType(node);
         }
 
         public override SyntaxNode VisitProperty(PropertySyntax node)
