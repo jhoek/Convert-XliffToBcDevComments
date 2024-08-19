@@ -31,6 +31,18 @@ public static class ExtensionMethods
                 case var n when n.Kind == SyntaxKind.Field:
                     yield return $"{currentSyntaxNode.Kind} {currentSyntaxNode.GetNameStringValue()}";
                     break;
+                case var n when n.Kind == SyntaxKind.FieldGroup:
+                    yield return $"{currentSyntaxNode.Kind} {currentSyntaxNode.GetNameStringValue()}";
+                    break;
+                case ActionBaseSyntax a:
+                    yield return $"Action {a.Name.Identifier.ValueText}";
+                    break;
+                case ControlBaseSyntax c:
+                    yield return $"Control {c.Name.Identifier.ValueText}";
+                    break;
+                case PageViewSyntax v:
+                    yield return $"View {v.Name.Identifier.ValueText}";
+                    break;
                 case var n when n.Kind == SyntaxKind.Property:
                     yield return $"{currentSyntaxNode.Kind} {currentSyntaxNode.As<PropertySyntax>().Name.Identifier.ValueText}";
                     break;
@@ -41,6 +53,17 @@ public static class ExtensionMethods
                     yield return $"Method {currentSyntaxNode.As<MethodDeclarationSyntax>().Name.Identifier.ValueText}";
                     break;
             }
+
+            /*
+ReportDataItem
+ReportColumn
+ReportLabel
+RequestPage
+QueryColumn
+XmlPortNode
+Change
+EnumValue
+            */
 
             currentSyntaxNode = currentSyntaxNode.Parent;
         }

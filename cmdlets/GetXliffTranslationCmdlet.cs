@@ -45,6 +45,7 @@ public class GetXliffTranslationCmdlet : PSCmdlet
                         p.Path,
                         p.SourceLanguage,
                         p.TargetLanguage,
+                        ID = u.Attribute("id").Value,
                         Source = u.Element(@namespace + "source").Value,
                         Target = u.Element(@namespace + "target")?.Value,
                         TargetState = u.Element(@namespace + "target")?.Attribute("state")?.Value,
@@ -58,6 +59,7 @@ public class GetXliffTranslationCmdlet : PSCmdlet
                     SourceLanguage = u.SourceLanguage,
                     TargetLanguage = u.TargetLanguage,
                     TargetState = TranslationStateParser.Parse(u.TargetState),
+                    ID = u.ID,
                     Source = u.Source,
                     Target = u.Target,
                     Context = u.Context

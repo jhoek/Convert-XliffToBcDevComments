@@ -9,6 +9,7 @@ public class NewXliffTranslationCmdlet : Cmdlet
     [Parameter()] public string XliffPath { get; set; }
     [Parameter()] public string SourceLanguage { get; set; } = Facts.BaseLanguage;
     [Parameter(Mandatory = true)] public string TargetLanguage { get; set; }
+    [Parameter(Mandatory = true)] public string ID { get; set; }
     [Parameter()] public string Source { get; set; }
     [Parameter(Mandatory = true)] public string Target { get; set; }
     [Parameter()] public TranslationState? TargetState { get; set; }
@@ -22,6 +23,7 @@ public class NewXliffTranslationCmdlet : Cmdlet
                 XliffPath = XliffPath,
                 SourceLanguage = SourceLanguage,
                 TargetLanguage = TargetLanguage,
+                ID = ID,
                 Source = Source,
                 Target = Target,
                 TargetState = TargetState,
