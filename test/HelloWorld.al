@@ -27,7 +27,7 @@ pageextension 50100 CustomerListExt extends "Customer List"
 
     actions
     {
-        addafter("&Customer")
+        addafter("Bank Accounts")
         {
             action(Foo)
             {
@@ -37,7 +37,7 @@ pageextension 50100 CustomerListExt extends "Customer List"
             }
         }
 
-        modify(ApplyTemplate)
+        modify("Blanket Orders")
         {
             Caption = 'Changed Action Caption';
         }
