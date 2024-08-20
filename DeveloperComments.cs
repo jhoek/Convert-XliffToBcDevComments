@@ -58,7 +58,7 @@ public class DeveloperComments : IEnumerable<DeveloperComment>
         innerList.Any(c => (c.LanguageCode ?? "").Matches(languageCode));
 
     public string Get(string languageCode) =>
-        this.Single(c => (c.LanguageCode ?? "").Matches(languageCode)).Value;
+        this.SingleOrDefault(c => (c.LanguageCode ?? "").Matches(languageCode))?.Value;
 
     public IEnumerator<DeveloperComment> GetEnumerator() =>
         innerList.GetEnumerator();

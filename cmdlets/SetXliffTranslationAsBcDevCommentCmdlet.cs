@@ -43,10 +43,13 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                 // FIXME: Already existing translations that match the xliff should also call WritePRocesssedTranslation
 
                 var developerComments = new DeveloperComments(oldCommentsPropertyValue);
-                var languageAlreadyPresent = developerComments.ContainsLanguageCode(translation.TargetLanguage);
-                var shouldSet = !languageAlreadyPresent || Force;
+                var targetLanguagePresentInDevComments = developerComments.ContainsLanguageCode(translation.TargetLanguage);
+                var translationsAlreadyMatch = developerComments.Get(translation.TargetLanguage) == translation.Target;
 
-                WriteVerbose($"Target language {translation.TargetLanguage} already present: {languageAlreadyPresent}; Force: {Force}");
+                var shouldSet = (!targetLanguagePresentInDevComments || Force) && !translationsAlreadyMatch;
+                var shouldEmit = shouldSet || translationsAlreadyMatch;
+
+                WriteVerbose($"Target language {translation.TargetLanguage} already present: {targetLanguagePresentInDevComments}; Force: {Force}");
 
                 if (shouldSet)
                 {
@@ -58,9 +61,10 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                     var newLabelPropertyValues = new SeparatedSyntaxList<IdentifierEqualsLiteralSyntax>().AddRange(oldOtherProperties.Prepend(newCommentsProperty));
                     var newLabelPropertyValueProperties = SyntaxFactory.CommaSeparatedIdentifierEqualsLiteralList(newLabelPropertyValues);
                     node = SyntaxFactory.Label(node.LabelText, SyntaxFactory.Token(SyntaxKind.CommaToken), newLabelPropertyValueProperties).NormalizeWhiteSpace();
-
-                    WriteProcessedTranslation?.Invoke(translation);
                 }
+
+                if (shouldEmit)
+                    WriteProcessedTranslation?.Invoke(translation);
             }
 
             return base.VisitLabel(node);
