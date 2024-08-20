@@ -5,7 +5,7 @@
       <group id="body">
         <trans-unit id="PageExtension 1255613137 - Action 3817892978 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2901867346">
           <source>Added Action</source>
-          <target state="needs-translation"/>
+          <target>Toegevoegde actie</target>
           <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension CustomerListExt - Action Added Action - Property Caption</note>
         </trans-unit>
@@ -17,7 +17,7 @@
         </trans-unit>
         <trans-unit id="PageExtension 1255613137 - Change 4241239722 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2901867346">
           <source>Changed Action Caption</source>
-          <target state="needs-translation"/>
+          <target>Gewijzigd actionopschrift</target>
           <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension CustomerListExt - Change Blanket Orders - Property Caption</note>
         </trans-unit>
