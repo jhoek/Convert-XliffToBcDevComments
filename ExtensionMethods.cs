@@ -3,6 +3,7 @@ using System.Management.Automation.Language;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using Microsoft.Dynamics.Nav.CodeAnalysis.Syntax;
+using Microsoft.Dynamics.Nav.CodeAnalysis.Utilities;
 
 namespace ConvertXliffToBcDevComments;
 
@@ -29,55 +30,55 @@ public static class ExtensionMethods
                     yield return $"{currentSyntaxNode.Kind.ToString().RegexReplace("Object$", "")} {currentSyntaxNode.GetNameStringValue()}";
                     yield break;
                 case var n when n.Kind == SyntaxKind.Field:
-                    yield return $"{currentSyntaxNode.Kind} {currentSyntaxNode.GetNameStringValue()}";
+                    yield return $"Field {n.GetNameStringValue()}";
                     break;
                 case var n when n.Kind == SyntaxKind.FieldGroup:
-                    yield return $"{currentSyntaxNode.Kind} {currentSyntaxNode.GetNameStringValue()}";
+                    yield return $"FieldGroup {n.GetNameStringValue()}";
                     break;
                 case ActionBaseSyntax a:
-                    yield return $"Action {a.Name.Identifier.ValueText}";
+                    yield return $"Action {a.GetNameStringValue()}";
                     break;
                 case ControlBaseSyntax c:
-                    yield return $"Control {c.Name.Identifier.ValueText}";
+                    yield return $"Control {c.GetNameStringValue()}";
                     break;
                 case PageViewSyntax v:
-                    yield return $"View {v.Name.Identifier.ValueText}";
+                    yield return $"View {v.GetNameStringValue()}";
                     break;
                 case ReportDataItemSyntax d:
-                    yield return $"ReportDataItem {d.Name.Identifier.ValueText}";
+                    yield return $"ReportDataItem {d.GetNameStringValue()}";
                     break;
                 case ReportColumnSyntax c:
-                    yield return $"ReportColumn {c.Name.Identifier.ValueText}";
+                    yield return $"ReportColumn {c.GetNameStringValue()}";
                     break;
                 case ReportLabelSyntax l:
-                    yield return $"ReportLabel {l.Name.Identifier.ValueText}";
+                    yield return $"ReportLabel {l.GetNameStringValue()}";
                     break;
                 case RequestPageSyntax r:
-                    yield return $"RequestPage {r.Name.Identifier.ValueText}";
+                    yield return $"RequestPage {r.GetNameStringValue()}";
                     break;
                 case QueryColumnSyntax c:
-                    yield return $"QueryColumn {c.Name.Identifier.ValueText}";
+                    yield return $"QueryColumn {c.GetNameStringValue()}";
                     break;
                 case XmlPortNodeSyntax n:
-                    yield return $"XmlPortNode {n.Name.Identifier.ValueText}";
+                    yield return $"XmlPortNode {n.GetNameStringValue()}";
                     break;
                 case ControlModifyChangeSyntax m:
-                    yield return $"Change {m.Name.Identifier.ValueText}";
+                    yield return $"Change {m.GetNameStringValue()}";
                     break;
                 case ActionModifyChangeSyntax m:
-                    yield return $"Change {m.Name.Identifier.ValueText}";
+                    yield return $"Change {m.GetNameStringValue()}";
                     break;
                 case var n when n.Kind == SyntaxKind.EnumValue:
-                    yield return $"EnumValue {n.As<EnumValueSyntax>().Name.Identifier.ValueText}";
+                    yield return $"EnumValue {n.GetNameStringValue()}";
                     break;
                 case var n when n.Kind == SyntaxKind.Property:
-                    yield return $"{currentSyntaxNode.Kind} {currentSyntaxNode.As<PropertySyntax>().Name.Identifier.ValueText}";
+                    yield return $"Property {n.As<PropertySyntax>().Name.Identifier.ValueText.UnquoteIdentifier()}";
                     break;
                 case var n when n.Kind == SyntaxKind.VariableDeclaration:
-                    yield return $"NamedType {currentSyntaxNode.As<VariableDeclarationSyntax>().Name.Identifier.ValueText}";
+                    yield return $"NamedType {n.GetNameStringValue()}";
                     break;
                 case var n when n.Kind == SyntaxKind.MethodDeclaration:
-                    yield return $"Method {currentSyntaxNode.As<MethodDeclarationSyntax>().Name.Identifier.ValueText}";
+                    yield return $"Method {n.GetNameStringValue()}";
                     break;
             }
 
