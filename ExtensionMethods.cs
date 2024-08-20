@@ -64,6 +64,9 @@ public static class ExtensionMethods
                 case ControlModifyChangeSyntax m:
                     yield return $"Change {m.Name.Identifier.ValueText}";
                     break;
+                case ActionModifyChangeSyntax m:
+                    yield return $"Change {m.Name.Identifier.ValueText}";
+                    break;
                 case var n when n.Kind == SyntaxKind.EnumValue:
                     yield return $"EnumValue {n.As<EnumValueSyntax>().Name.Identifier.ValueText}";
                     break;
