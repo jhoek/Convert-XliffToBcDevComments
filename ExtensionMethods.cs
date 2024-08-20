@@ -26,11 +26,11 @@ public static class ExtensionMethods
         {
             switch (currentSyntaxNode)
             {
-                case var n when n.Kind == SyntaxKind.EnumType:
-                    yield return $"Enum {n.GetNameStringValue()}";
-                    break;
+                // case var n when n.Kind == SyntaxKind.EnumType:
+                //     yield return $"Enum {n.GetNameStringValue()}";
+                //     break;
                 case var n when n.Kind.IsObject():
-                    yield return $"{currentSyntaxNode.Kind.ToString().RegexReplace("Object$", "")} {currentSyntaxNode.GetNameStringValue()}";
+                    yield return $"{currentSyntaxNode.Kind.ToString().RegexReplace("Object$", "").RegexReplace("Type$", "")} {currentSyntaxNode.GetNameStringValue()}";
                     yield break;
                 case var n when n.Kind == SyntaxKind.Field:
                     yield return $"Field {n.GetNameStringValue()}";
