@@ -3,20 +3,20 @@
   <file datatype="xml" source-language="en-US" target-language="en-US" original="test">
     <body>
       <group id="body">
-        <trans-unit id="PageExtension 1255613137 - Action 2395157394 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2901867346">
+        <trans-unit id="PageExtension 1255613137 - Action 3817892978 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2901867346">
           <source>Added Action</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension CustomerListExt - Action Foo - Property Caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension CustomerListExt - Action Added Action - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 1255613137 - Change 2039693239 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2901867346">
           <source>Changed Control Caption</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension CustomerListExt - Change Application Method - Property Caption</note>
         </trans-unit>
-        <trans-unit id="PageExtension 1255613137 - Change 3569786096 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2901867346">
+        <trans-unit id="PageExtension 1255613137 - Change 4241239722 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2901867346">
           <source>Changed Action Caption</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension CustomerListExt - Change ApplyTemplate - Property Caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension CustomerListExt - Change Blanket Orders - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 1255613137 - Control 955210983 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2901867346">
           <source>Added Control</source>

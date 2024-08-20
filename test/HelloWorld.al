@@ -29,7 +29,7 @@ pageextension 50100 CustomerListExt extends "Customer List"
     {
         addafter("Bank Accounts")
         {
-            action(Foo)
+            action("Added Action")
             {
                 Caption = 'Added Action';
                 ApplicationArea = All;
