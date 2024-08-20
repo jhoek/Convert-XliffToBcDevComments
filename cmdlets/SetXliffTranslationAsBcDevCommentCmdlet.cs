@@ -40,8 +40,6 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                 var oldOtherProperties = oldLabelPropertyValues.Where(v => !v.Identifier.ValueText.Matches("Comment"));
                 var oldCommentsPropertyValue = oldCommentsProperty?.Literal.ToFullString().UnquoteLiteral();
 
-                // FIXME: Already existing translations that match the xliff should also call WritePRocesssedTranslation
-
                 var developerComments = new DeveloperComments(oldCommentsPropertyValue);
                 var targetLanguagePresentInDevComments = developerComments.ContainsLanguageCode(translation.TargetLanguage);
                 var translationsAlreadyMatch = developerComments.Get(translation.TargetLanguage) == translation.Target;
