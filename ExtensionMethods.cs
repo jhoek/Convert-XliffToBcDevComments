@@ -43,6 +43,30 @@ public static class ExtensionMethods
                 case PageViewSyntax v:
                     yield return $"View {v.Name.Identifier.ValueText}";
                     break;
+                case ReportDataItemSyntax d:
+                    yield return $"ReportDataItem {d.Name.Identifier.ValueText}";
+                    break;
+                case ReportColumnSyntax c:
+                    yield return $"ReportColumn {c.Name.Identifier.ValueText}";
+                    break;
+                case ReportLabelSyntax l:
+                    yield return $"ReportLabel {l.Name.Identifier.ValueText}";
+                    break;
+                case RequestPageSyntax r:
+                    yield return $"RequestPage {r.Name.Identifier.ValueText}";
+                    break;
+                case QueryColumnSyntax c:
+                    yield return $"QueryColumn {c.Name.Identifier.ValueText}";
+                    break;
+                case XmlPortNodeSyntax n:
+                    yield return $"XmlPortNode {n.Name.Identifier.ValueText}";
+                    break;
+                case ControlModifyChangeSyntax m:
+                    yield return $"Change {m.Name.Identifier.ValueText}";
+                    break;
+                case var n when n.Kind == SyntaxKind.EnumValue:
+                    yield return $"EnumValue {n.As<EnumValueSyntax>().Name.Identifier.ValueText}";
+                    break;
                 case var n when n.Kind == SyntaxKind.Property:
                     yield return $"{currentSyntaxNode.Kind} {currentSyntaxNode.As<PropertySyntax>().Name.Identifier.ValueText}";
                     break;
@@ -55,12 +79,6 @@ public static class ExtensionMethods
             }
 
             /*
-ReportDataItem
-ReportColumn
-ReportLabel
-RequestPage
-QueryColumn
-XmlPortNode
 Change
 EnumValue
             */
