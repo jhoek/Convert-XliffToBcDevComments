@@ -41,7 +41,7 @@ public static class ExtensionMethods
                 case ActionBaseSyntax a:
                     yield return $"Action {a.GetNameStringValue()}";
                     break;
-                case ControlBaseSyntax c:
+                case ControlBaseSyntax c when c.GetType().Name != "PageAreaSyntax":
                     yield return $"Control {c.GetNameStringValue()}";
                     break;
                 case PageViewSyntax v:
