@@ -14,9 +14,9 @@ public class DeveloperComment
     {
         if (source.Contains("="))
         {
-            var elements = source.Split("=", 2, StringSplitOptions.TrimEntries);
+            var elements = source.Split("=", 2, StringSplitOptions.None);
 
-            LanguageCode = elements[0];
+            LanguageCode = elements[0].Trim();
             Value = elements[1];
         }
         else
