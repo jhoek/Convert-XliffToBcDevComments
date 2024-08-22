@@ -26,9 +26,8 @@ public static class ExtensionMethods
         {
             switch (currentSyntaxNode)
             {
-                // case var n when n.Kind == SyntaxKind.EnumType:
-                //     yield return $"Enum {n.GetNameStringValue()}";
-                //     break;
+                case var n when n.Kind == SyntaxKind.RequestPage:
+                    break;
                 case var n when n.Kind.IsObject():
                     yield return $"{currentSyntaxNode.Kind.ToString().RegexReplace("Object$", "").RegexReplace("Type$", "")} {currentSyntaxNode.GetNameStringValue()}";
                     yield break;
@@ -41,7 +40,7 @@ public static class ExtensionMethods
                 case ActionBaseSyntax a:
                     yield return $"Action {a.GetNameStringValue()}";
                     break;
-                case ControlBaseSyntax c when c.GetType().Name != "PageAreaSyntax":
+                case ControlBaseSyntax c:
                     yield return $"Control {c.GetNameStringValue()}";
                     break;
                 case PageViewSyntax v:
@@ -83,14 +82,31 @@ public static class ExtensionMethods
                 case var n when n.Kind == SyntaxKind.MethodDeclaration:
                     yield return $"Method {n.GetNameStringValue()}";
                     break;
+                case var n when n.Kind == SyntaxKind.TriggerDeclaration:
+                    yield return $"Method {n.GetNameStringValue()}";
+                    break;
             }
 
-            /*
-Change
-EnumValue
-            */
+            switch (currentSyntaxNode)
+            {
+                case XmlPortNodeSyntax x:
+                    while (currentSyntaxNode.Parent is XmlPortNodeSyntax)
+                        currentSyntaxNode = currentSyntaxNode.Parent;
 
-            currentSyntaxNode = currentSyntaxNode.Parent;
+                    currentSyntaxNode = currentSyntaxNode.Parent;
+                    break;
+
+                case ControlBaseSyntax c:
+                    while (currentSyntaxNode.Parent is ControlBaseSyntax)
+                        currentSyntaxNode = currentSyntaxNode.Parent;
+
+                    currentSyntaxNode = currentSyntaxNode.Parent;
+                    break;
+
+                default:
+                    currentSyntaxNode = currentSyntaxNode.Parent;
+                    break;
+            }
         }
     }
 
