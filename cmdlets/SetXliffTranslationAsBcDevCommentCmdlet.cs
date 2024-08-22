@@ -47,7 +47,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                 var shouldSet = (!targetLanguagePresentInDevComments || Force) && !translationsAlreadyMatch;
                 var shouldEmit = shouldSet || translationsAlreadyMatch;
 
-                WriteVerbose($"Target language {translation.TargetLanguage} already present: {targetLanguagePresentInDevComments}; Force: {Force}");
+                WriteVerbose($"Target language {translation.TargetLanguage} already present: {targetLanguagePresentInDevComments} ({developerComments.Get(translation.Target)}); Force: {Force}");
 
                 if (shouldSet)
                 {
