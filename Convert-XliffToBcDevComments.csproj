@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
@@ -10,7 +10,7 @@
 
     <ItemGroup>
         <Reference Include="Microsoft.Dynamics.Nav.CodeAnalysis.dll">
-            <HintPath>/Users/jhoek/.vscode/extensions/ms-dynamics-smb.al-13.1.1065068/bin/darwin/Microsoft.Dynamics.Nav.CodeAnalysis.dll</HintPath>
+            <HintPath>/Users/jhoek/.vscode/extensions/ms-dynamics-smb.al-12.7.964847/bin/darwin/Microsoft.Dynamics.Nav.CodeAnalysis.dll</HintPath>
         </Reference>
     </ItemGroup>
 
