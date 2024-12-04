@@ -6,5 +6,5 @@ $VerbosePreference = 'Continue'
 # | Remove-XliffTranslation
 
 Get-XliffTranslation -Path 'NakCore:/Translations/Naktuinbouw Extension.nl-NL.xlf'
-| Set-XliffTranslationAsBcDevComment -ObjectPath NakCore:/src/table/CourseVersionLineDetail.table.al -PassThru
+| Set-XliffTranslationAsBcDevComment -ObjectPath NakCore:/src/table/CropGroupsperCropcode.table.al -PassThru
 | Remove-XliffTranslation
