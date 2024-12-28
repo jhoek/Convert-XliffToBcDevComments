@@ -62,6 +62,10 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                 }
 
                 if (shouldEmit)
+                    // TODO: Shouldn't we simply always emit the translation, so that we can also remove e.g. untranslated strings from the XLIFF?
+                    // TODO: I guess this means that filtering the translations should take place in the rewriter? All translation units should
+                    // TODO: be passed into the rewriter (along with the value of IncludeState) which applies relevant translations before returning
+                    // TODO: *all* translations, thus allowing Remove-XliffTranslation to remove all translations, including e.g. state "untranslated".
                     WriteProcessedTranslation?.Invoke(translation);
             }
 
