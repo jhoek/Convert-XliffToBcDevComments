@@ -28,13 +28,13 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
         public override SyntaxNode VisitLabel(LabelSyntax node)
         {
             var contextString = node.ContextString();
-            WriteVerbose($"Context string is {contextString}");
+            WriteVerbose($"- Context string is {contextString}");
 
             var translation = Translations.SingleOrDefault(t => t.Context.Matches(contextString));
 
             if (translation is not null)
             {
-                WriteVerbose($"Found translation '{translation.Target}'");
+                WriteVerbose($"- Found translation '{translation.Target}'");
                 var shouldProcess = StatesToProcess.Contains(translation.TargetState ?? TranslationState.Translated);
                 var shouldEmit = StatesToEmit.Contains(translation.TargetState ?? TranslationState.Translated);
 
@@ -52,17 +52,17 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
 
                     shouldProcess = (!targetLanguagePresentInDevComments || Force) && !translationsAlreadyMatch;
 
-                    WriteVerbose($"Target language {translation.TargetLanguage} already present: {targetLanguagePresentInDevComments} ({developerComments.Get(translation.Target)}); Force: {Force}");
+                    WriteVerbose($"- Target language {translation.TargetLanguage} already present: {targetLanguagePresentInDevComments} ({developerComments.Get(translation.Target)}); Force: {Force}");
 
                     if (targetLanguagePresentInDevComments && !Force && !translationsAlreadyMatch)
                     {
                         shouldEmit = false; // Replacing translation in dev comment was skipped, keep translation in xliff file
-                        WriteVerbose($"This entry will not be emitted since we didn't use it in the dev comments.");
+                        WriteVerbose($"- This entry will not be emitted since we didn't use it in the dev comments.");
                     }
 
                     if (shouldProcess)
                     {
-                        WriteVerbose($"Comment property should be set (translation was missing or -Force was specified)");
+                        WriteVerbose($"- Comment property should be set (translation was missing or -Force was specified)");
 
                         developerComments.Set(translation.TargetLanguage, translation.Target);
                         var newCommentsPropertyValue = developerComments.ToString();
@@ -74,7 +74,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                 }
                 else
                 {
-                    WriteVerbose($"Not processing, because state is {translation.TargetState}.");
+                    WriteVerbose($"- Not processing, because state is {translation.TargetState}.");
                 }
 
                 if (shouldEmit)
@@ -83,7 +83,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                 }
                 else
                 {
-                    WriteVerbose("Not emitting.");
+                    WriteVerbose("- Not emitting.");
                 }
             }
 
@@ -147,6 +147,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
             .ToList()
             .ForEach(p =>
             {
+                WriteVerbose($"Examining {p}");
                 var compilationUnit = SyntaxFactory.ParseSyntaxTree(File.ReadAllText(p), p).GetRoot();
                 compilationUnit = rewriter.Visit(compilationUnit);
                 File.WriteAllText(p, compilationUnit.ToFullString());
