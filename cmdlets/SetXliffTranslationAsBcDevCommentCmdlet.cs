@@ -72,10 +72,18 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                         node = SyntaxFactory.Label(node.LabelText, SyntaxFactory.Token(SyntaxKind.CommaToken), newLabelPropertyValueProperties).NormalizeWhiteSpace();
                     }
                 }
+                else
+                {
+                    WriteVerbose($"Not processing, because state is {translation.TargetState}.");
+                }
 
                 if (shouldEmit)
                 {
                     WriteProcessedTranslation?.Invoke(translation);
+                }
+                else
+                {
+                    WriteVerbose("Not emitting.");
                 }
             }
 
@@ -128,7 +136,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
         var rewriter = new SetXliffTranslationAsBcDevCommentRewriter(translations)
         {
             StatesToProcess = StateToProcess,
-            StatesToEmit = StateToProcess,
+            StatesToEmit = StateToEmit,
             WriteVerbose = WriteVerbose,
             Force = Force
         };
