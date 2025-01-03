@@ -10,4 +10,5 @@ public class XliffTranslation
     public required string Target { get; init; }
     public TranslationState? TargetState { get; init; }
     public required string Context { get; init; } // Enum Team Hierarchy - EnumValue Managing Board & Executive Secretariat - Property Caption
+    public override string ToString() => $"'{Source}' = '{Target}'";
 }
