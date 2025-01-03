@@ -59,12 +59,12 @@ public class RemoveXliffTranslationCmdlet : PSCmdlet
 
         if (translationUnit is null)
         {
-            WriteVerbose($"A translation-unit could not be found for translation {translation.Context}.");
+            WriteVerbose($"- A translation-unit could not be found for translation {translation.Context}.");
             return false;
         }
 
         translationUnit.Remove();
-        WriteVerbose($"A translation-unit for translation {translation.Context} was found and removed.");
+        WriteVerbose($"- A translation-unit for translation {translation.Context} was found and removed.");
 
         return true;
     }

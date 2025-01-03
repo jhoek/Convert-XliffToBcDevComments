@@ -19,6 +19,8 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
         }
 
         public IEnumerable<XliffTranslation> Translations { get; init; }
+        public TranslationState[] StatesToProcess { get; set; }
+        public TranslationState[] StatesToEmit { get; set; }
         public SwitchParameter Force { get; set; }
         public Action<string> WriteVerbose { get; set; }
         public Action<XliffTranslation> WriteProcessedTranslation { get; set; }
@@ -26,47 +28,63 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
         public override SyntaxNode VisitLabel(LabelSyntax node)
         {
             var contextString = node.ContextString();
-            WriteVerbose($"Context string is {contextString}");
+            WriteVerbose($"- Context string is {contextString}");
 
             var translation = Translations.SingleOrDefault(t => t.Context.Matches(contextString));
 
             if (translation is not null)
             {
-                WriteVerbose($"Found translation '{translation.Target}'");
+                WriteVerbose($"  - Found translation '{translation.Target}'");
+                var shouldProcess = StatesToProcess.Contains(translation.TargetState ?? TranslationState.Translated);
+                var shouldEmit = StatesToEmit.Contains(translation.TargetState ?? TranslationState.Translated);
 
-                var oldLabelPropertyValueProperties = node.Properties;
-                var oldLabelPropertyValues = oldLabelPropertyValueProperties?.Values ?? new SeparatedSyntaxList<IdentifierEqualsLiteralSyntax>();
-                var oldCommentsProperty = oldLabelPropertyValues.SingleOrDefault(v => v.Identifier.ValueText.Matches("Comment"));
-                var oldOtherProperties = oldLabelPropertyValues.Where(v => !v.Identifier.ValueText.Matches("Comment"));
-                var oldCommentsPropertyValue = oldCommentsProperty?.Literal.ToFullString().UnquoteLiteral();
-
-                var developerComments = new DeveloperComments(oldCommentsPropertyValue);
-                var targetLanguagePresentInDevComments = developerComments.ContainsLanguageCode(translation.TargetLanguage);
-                var translationsAlreadyMatch = developerComments.Get(translation.TargetLanguage) == translation.Target;
-
-                var shouldSet = (!targetLanguagePresentInDevComments || Force) && !translationsAlreadyMatch;
-                var shouldEmit = shouldSet || translationsAlreadyMatch;
-
-                WriteVerbose($"Target language {translation.TargetLanguage} already present: {targetLanguagePresentInDevComments} ({developerComments.Get(translation.Target)}); Force: {Force}");
-
-                if (shouldSet)
+                if (shouldProcess)
                 {
-                    WriteVerbose($"Comment property should be set (translation was missing or -Force was specified)");
+                    var oldLabelPropertyValueProperties = node.Properties;
+                    var oldLabelPropertyValues = oldLabelPropertyValueProperties?.Values ?? new SeparatedSyntaxList<IdentifierEqualsLiteralSyntax>();
+                    var oldCommentsProperty = oldLabelPropertyValues.SingleOrDefault(v => v.Identifier.ValueText.Matches("Comment"));
+                    var oldOtherProperties = oldLabelPropertyValues.Where(v => !v.Identifier.ValueText.Matches("Comment"));
+                    var oldCommentsPropertyValue = oldCommentsProperty?.Literal.ToFullString().UnquoteLiteral();
 
-                    developerComments.Set(translation.TargetLanguage, translation.Target);
-                    var newCommentsPropertyValue = developerComments.ToString();
-                    var newCommentsProperty = SyntaxFactory.IdentifierEqualsLiteral("Comment", SyntaxFactory.StringLiteralValue(SyntaxFactory.Literal(newCommentsPropertyValue)));
-                    var newLabelPropertyValues = new SeparatedSyntaxList<IdentifierEqualsLiteralSyntax>().AddRange(oldOtherProperties.Prepend(newCommentsProperty));
-                    var newLabelPropertyValueProperties = SyntaxFactory.CommaSeparatedIdentifierEqualsLiteralList(newLabelPropertyValues);
-                    node = SyntaxFactory.Label(node.LabelText, SyntaxFactory.Token(SyntaxKind.CommaToken), newLabelPropertyValueProperties).NormalizeWhiteSpace();
+                    var developerComments = new DeveloperComments(oldCommentsPropertyValue);
+                    var targetLanguagePresentInDevComments = developerComments.ContainsLanguageCode(translation.TargetLanguage);
+                    var translationsAlreadyMatch = developerComments.Get(translation.TargetLanguage) == translation.Target;
+
+                    shouldProcess = (!targetLanguagePresentInDevComments || Force) && !translationsAlreadyMatch;
+
+                    WriteVerbose($"  - Target language {translation.TargetLanguage} already present: {targetLanguagePresentInDevComments} ({developerComments.Get(translation.Target)}); Force: {Force}");
+
+                    if (targetLanguagePresentInDevComments && !Force && !translationsAlreadyMatch)
+                    {
+                        shouldEmit = false; // Replacing translation in dev comment was skipped, keep translation in xliff file
+                        WriteVerbose($"  - This entry will not be emitted since we didn't use it in the dev comments.");
+                    }
+
+                    if (shouldProcess)
+                    {
+                        WriteVerbose($"  - Comment property should be set (translation was missing or -Force was specified)");
+
+                        developerComments.Set(translation.TargetLanguage, translation.Target);
+                        var newCommentsPropertyValue = developerComments.ToString();
+                        var newCommentsProperty = SyntaxFactory.IdentifierEqualsLiteral("Comment", SyntaxFactory.StringLiteralValue(SyntaxFactory.Literal(newCommentsPropertyValue)));
+                        var newLabelPropertyValues = new SeparatedSyntaxList<IdentifierEqualsLiteralSyntax>().AddRange(oldOtherProperties.Prepend(newCommentsProperty));
+                        var newLabelPropertyValueProperties = SyntaxFactory.CommaSeparatedIdentifierEqualsLiteralList(newLabelPropertyValues);
+                        node = SyntaxFactory.Label(node.LabelText, SyntaxFactory.Token(SyntaxKind.CommaToken), newLabelPropertyValueProperties).NormalizeWhiteSpace();
+                    }
+                }
+                else
+                {
+                    WriteVerbose($"  - Not processing, because state is {translation.TargetState}.");
                 }
 
                 if (shouldEmit)
-                    // TODO: Shouldn't we simply always emit the translation, so that we can also remove e.g. untranslated strings from the XLIFF?
-                    // TODO: I guess this means that filtering the translations should take place in the rewriter? All translation units should
-                    // TODO: be passed into the rewriter (along with the value of IncludeState) which applies relevant translations before returning
-                    // TODO: *all* translations, thus allowing Remove-XliffTranslation to remove all translations, including e.g. state "untranslated".
+                {
                     WriteProcessedTranslation?.Invoke(translation);
+                }
+                else
+                {
+                    WriteVerbose("  - Not emitting.");
+                }
             }
 
             return base.VisitLabel(node);
@@ -83,7 +101,11 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
     public XliffTranslation[] Translations { get; set; }
 
     [Parameter()]
-    public TranslationState[] IncludeState { get; set; } = [TranslationState.Final, TranslationState.Translated, TranslationState.SignedOff];
+    [Alias("IncludeState")] // Previous name, for backward compatibility
+    public TranslationState[] StateToProcess { get; set; } = [TranslationState.Final, TranslationState.Translated, TranslationState.SignedOff];
+
+    [Parameter()]
+    public TranslationState[] StateToEmit { get; set; } = [TranslationState.Final, TranslationState.NeedsTranslation, TranslationState.New, TranslationState.SignedOff, TranslationState.Translated];
 
     [Parameter()]
     public SwitchParameter Force { get; set; }
@@ -109,11 +131,12 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
     protected override void EndProcessing()
     {
         var translations = CachedTranslations
-            .Where(t => t.TargetLanguage != Facts.BaseLanguage)
-            .Where(t => IncludeState.Contains(t.TargetState ?? TranslationState.Translated));
+            .Where(t => t.TargetLanguage != Facts.BaseLanguage);
 
         var rewriter = new SetXliffTranslationAsBcDevCommentRewriter(translations)
         {
+            StatesToProcess = StateToProcess,
+            StatesToEmit = StateToEmit,
             WriteVerbose = WriteVerbose,
             Force = Force
         };
@@ -124,6 +147,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
             .ToList()
             .ForEach(p =>
             {
+                WriteVerbose($"Examining {p}");
                 var compilationUnit = SyntaxFactory.ParseSyntaxTree(File.ReadAllText(p), p).GetRoot();
                 compilationUnit = rewriter.Visit(compilationUnit);
                 File.WriteAllText(p, compilationUnit.ToFullString());
