@@ -103,6 +103,13 @@ public static class ExtensionMethods
                     currentSyntaxNode = currentSyntaxNode.Parent;
                     break;
 
+                case ActionBaseSyntax a:
+                    while (currentSyntaxNode.Parent is ActionBaseSyntax)
+                        currentSyntaxNode = currentSyntaxNode.Parent;
+
+                    currentSyntaxNode = currentSyntaxNode.Parent;
+                    break;
+
                 default:
                     currentSyntaxNode = currentSyntaxNode.Parent;
                     break;
