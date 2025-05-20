@@ -97,17 +97,11 @@ public static class ExtensionMethods
                     break;
 
                 case ControlBaseSyntax c:
-                    while (currentSyntaxNode.Parent is ControlBaseSyntax)
-                        currentSyntaxNode = currentSyntaxNode.Parent;
-
-                    currentSyntaxNode = currentSyntaxNode.Parent;
+                    currentSyntaxNode = currentSyntaxNode.GetContainingObjectSyntax();
                     break;
 
                 case ActionBaseSyntax a:
-                    while (currentSyntaxNode.Parent is ActionBaseSyntax)
-                        currentSyntaxNode = currentSyntaxNode.Parent;
-
-                    currentSyntaxNode = currentSyntaxNode.Parent;
+                    currentSyntaxNode = currentSyntaxNode.GetContainingObjectSyntax();
                     break;
 
                 default:
