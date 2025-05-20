@@ -54,8 +54,8 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
 
                     if (targetLanguagePresentInDevComments)
                     {
-                        WriteVerbose($"  - Found translation '{developerComments.Get(translation.TargetLanguage)}' in developer comments.)");
-                        WriteVerbose($"  - Translations already match: {translationsAlreadyMatch}; Force: {Force}");
+                        WriteVerbose($"  - Found translation '{developerComments.Get(translation.TargetLanguage)}' in developer comments.");
+                        WriteVerbose($"  - Translations match: {translationsAlreadyMatch}; force: {Force}");
                     }
                     else
                     {
