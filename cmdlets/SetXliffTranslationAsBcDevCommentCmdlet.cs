@@ -34,7 +34,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
 
             if (translation is not null)
             {
-                WriteVerbose($"  - Found translation '{translation.Target}'");
+                WriteVerbose($"  - Found translation '{translation.Target}' in translation file.");
                 var shouldProcess = StatesToProcess.Contains(translation.TargetState ?? TranslationState.Translated);
                 var shouldEmit = StatesToEmit.Contains(translation.TargetState ?? TranslationState.Translated);
 
@@ -47,14 +47,14 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                     var oldCommentsPropertyValue = oldCommentsProperty?.Literal.ToFullString().UnquoteLiteral();
 
                     var developerComments = new DeveloperComments(oldCommentsPropertyValue);
-                    WriteVerbose($"  - Developer comments contain these languages: {string.Join(", ", developerComments.Select(c => c.LanguageCode))}");
+                    WriteVerbose($"  - Developer comments in object contain these languages: {string.Join(", ", developerComments.Select(c => c.LanguageCode))}");
 
                     var targetLanguagePresentInDevComments = developerComments.ContainsLanguageCode(translation.TargetLanguage);
                     var translationsAlreadyMatch = developerComments.Get(translation.TargetLanguage) == translation.Target;
 
                     shouldProcess = (!targetLanguagePresentInDevComments || Force) && !translationsAlreadyMatch;
 
-                    WriteVerbose($"  - Target language {translation.TargetLanguage} already present: {targetLanguagePresentInDevComments} ({developerComments.Get(translation.TargetLanguage)})");
+                    WriteVerbose($"  - Translation target language {translation.TargetLanguage} already present in developer comments: {targetLanguagePresentInDevComments} ({developerComments.Get(translation.TargetLanguage)})");
                     WriteVerbose($"  - Translations already match: {translationsAlreadyMatch}; Force: {Force}");
 
                     if (targetLanguagePresentInDevComments && !Force && !translationsAlreadyMatch)
