@@ -47,12 +47,15 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
                     var oldCommentsPropertyValue = oldCommentsProperty?.Literal.ToFullString().UnquoteLiteral();
 
                     var developerComments = new DeveloperComments(oldCommentsPropertyValue);
+                    WriteVerbose($"  - Developer comments contain these languages: {string.Join(", ", developerComments.Select(c => c.LanguageCode))}");
+
                     var targetLanguagePresentInDevComments = developerComments.ContainsLanguageCode(translation.TargetLanguage);
                     var translationsAlreadyMatch = developerComments.Get(translation.TargetLanguage) == translation.Target;
 
                     shouldProcess = (!targetLanguagePresentInDevComments || Force) && !translationsAlreadyMatch;
 
-                    WriteVerbose($"  - Target language {translation.TargetLanguage} already present: {targetLanguagePresentInDevComments} ({developerComments.Get(translation.Target)}); Force: {Force}");
+                    WriteVerbose($"  - Target language {translation.TargetLanguage} already present: {targetLanguagePresentInDevComments} ({developerComments.Get(translation.TargetLanguage)})");
+                    WriteVerbose($"  - Translations already match: {translationsAlreadyMatch}; Force: {Force}");
 
                     if (targetLanguagePresentInDevComments && !Force && !translationsAlreadyMatch)
                     {
