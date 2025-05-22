@@ -26,7 +26,8 @@ public static class ExtensionMethods
         {
             switch (currentSyntaxNode)
             {
-                case var n when n.Kind == SyntaxKind.RequestPage:
+                case RequestPageSyntax r:
+                    yield return $"RequestPage RequestOptionsPage";
                     break;
                 case var n when n.Kind.IsObject():
                     yield return $"{currentSyntaxNode.Kind.ToString().RegexReplace("Object$", "").RegexReplace("Type$", "")} {currentSyntaxNode.GetNameStringValue()}";
@@ -36,6 +37,9 @@ public static class ExtensionMethods
                     break;
                 case var n when n.Kind == SyntaxKind.FieldGroup:
                     yield return $"FieldGroup {n.GetNameStringValue()}";
+                    break;
+                case FieldModificationSyntax f:
+                    yield return $"Change {f.GetNameStringValue()}";
                     break;
                 case ActionBaseSyntax a:
                     yield return $"Action {a.GetNameStringValue()}";
@@ -57,9 +61,6 @@ public static class ExtensionMethods
                     break;
                 case ReportLayoutSyntax l:
                     yield return $"ReportLayout {l.GetNameStringValue()}";
-                    break;
-                case RequestPageSyntax r:
-                    yield return $"RequestPage {r.GetNameStringValue()}";
                     break;
                 case QueryColumnSyntax c:
                     yield return $"QueryColumn {c.GetNameStringValue()}";
@@ -93,26 +94,23 @@ public static class ExtensionMethods
             switch (currentSyntaxNode)
             {
                 case XmlPortNodeSyntax:
-                    while (currentSyntaxNode.Parent is XmlPortNodeSyntax)
-                        currentSyntaxNode = currentSyntaxNode.Parent;
-
-                    currentSyntaxNode = currentSyntaxNode.Parent;
+                    currentSyntaxNode = currentSyntaxNode.GetContainingApplicationObjectSyntax();
                     break;
 
                 case ReportDataItemSyntax:
-                    currentSyntaxNode = currentSyntaxNode.GetContainingObjectSyntax();
+                    currentSyntaxNode = currentSyntaxNode.GetContainingApplicationObjectSyntax();
                     break;
 
                 case ReportColumnSyntax:
-                    currentSyntaxNode = currentSyntaxNode.GetContainingObjectSyntax();
+                    currentSyntaxNode = currentSyntaxNode.GetContainingApplicationObjectSyntax();
                     break;
 
                 case ControlBaseSyntax:
-                    currentSyntaxNode = currentSyntaxNode.GetContainingObjectSyntax();
+                    currentSyntaxNode = currentSyntaxNode.GetContainingApplicationObjectSyntax();
                     break;
 
                 case ActionBaseSyntax:
-                    currentSyntaxNode = currentSyntaxNode.GetContainingObjectSyntax();
+                    currentSyntaxNode = currentSyntaxNode.GetContainingApplicationObjectSyntax();
                     break;
 
                 default:
