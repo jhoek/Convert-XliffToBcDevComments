@@ -92,22 +92,26 @@ public static class ExtensionMethods
 
             switch (currentSyntaxNode)
             {
-                case XmlPortNodeSyntax x:
+                case XmlPortNodeSyntax:
                     while (currentSyntaxNode.Parent is XmlPortNodeSyntax)
                         currentSyntaxNode = currentSyntaxNode.Parent;
 
                     currentSyntaxNode = currentSyntaxNode.Parent;
                     break;
 
-                case ReportDataItemSyntax d:
+                case ReportDataItemSyntax:
                     currentSyntaxNode = currentSyntaxNode.GetContainingObjectSyntax();
                     break;
 
-                case ControlBaseSyntax c:
+                case ReportColumnSyntax:
                     currentSyntaxNode = currentSyntaxNode.GetContainingObjectSyntax();
                     break;
 
-                case ActionBaseSyntax a:
+                case ControlBaseSyntax:
+                    currentSyntaxNode = currentSyntaxNode.GetContainingObjectSyntax();
+                    break;
+
+                case ActionBaseSyntax:
                     currentSyntaxNode = currentSyntaxNode.GetContainingObjectSyntax();
                     break;
 
