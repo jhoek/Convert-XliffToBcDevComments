@@ -55,6 +55,9 @@ public static class ExtensionMethods
                 case ReportLabelSyntax l:
                     yield return $"ReportLabel {l.GetNameStringValue()}";
                     break;
+                case ReportLayoutSyntax l:
+                    yield return $"ReportLayout {l.GetNameStringValue()}";
+                    break;
                 case RequestPageSyntax r:
                     yield return $"RequestPage {r.GetNameStringValue()}";
                     break;
@@ -94,6 +97,10 @@ public static class ExtensionMethods
                         currentSyntaxNode = currentSyntaxNode.Parent;
 
                     currentSyntaxNode = currentSyntaxNode.Parent;
+                    break;
+
+                case ReportDataItemSyntax d:
+                    currentSyntaxNode = currentSyntaxNode.GetContainingObjectSyntax();
                     break;
 
                 case ControlBaseSyntax c:
