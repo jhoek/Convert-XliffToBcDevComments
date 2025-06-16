@@ -20,6 +20,6 @@
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
         <Exec Command="pwsh -Command &quot;New-BinaryModuleManifest -Path $(TargetDir)$(TargetName).psd1 -ModulePath $(ProjectDir) -SanitizedModuleName 'Convert-XliffToBcDevComments' -Guid 24f40e81-da23-4ad0-990e-ff7d29332a39 -Verbose &quot;" />
-        <!-- <Exec Command="pwsh -Command &quot;Update-ModuleManifest -Path $(TargetDir)$(TargetName).psd1 -TypesToProcess UncommonSense.AL.Meta.Types.ps1xml -Description 'PowerShell cmdlets for retrieving meta information about AL constructs' -Author 'Jan Hoek' -LicenseUri 'https://github.com/jhoek/UncommonSense.AL.Meta?tab=GPL-3.0-1-ov-file' -ProjectUri 'https://github.com/jhoek/UncommonSense.AL.Meta' -Tags @('meta','al','codeanalysis','businesscentral') &quot;" /> -->
+        <Exec Command="pwsh -Command &quot;Update-ModuleManifest -Path $(TargetDir)$(TargetName).psd1 -Description 'PowerShell cmdlet for converting XLIFF translations to AL developer comments' -Author 'Jan Hoek' -LicenseUri 'https://github.com/jhoek/Convert-XliffToBcDevComments?tab=MIT-1-ov-file' -ProjectUri 'https://github.com/jhoek/Convert-XliffToBcDevComments' -Tags @('al','businesscentral') &quot;" />
     </Target>
 </Project>
