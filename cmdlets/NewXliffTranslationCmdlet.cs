@@ -1,7 +1,9 @@
 using System.Management.Automation.Language;
+using UncommonSense.PowerShell.Maml.Attributes;
 
 namespace ConvertXliffToBcDevComments;
 
+[CmdletDescription("Creates a user-defined translation entry.")]
 [Cmdlet(VerbsCommon.New, Nouns.XliffTranslation)]
 [OutputType(typeof(XliffTranslation))]
 public class NewXliffTranslationCmdlet : Cmdlet
