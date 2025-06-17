@@ -1,15 +1,19 @@
 ﻿using System.Xml.Linq;
+using UncommonSense.PowerShell.Maml.Attributes;
 
 namespace ConvertXliffToBcDevComments;
 
+[CmdletDescription("Retrieves the translations from one or more XLIFF files.")]
 [Cmdlet(VerbsCommon.Get, Nouns.XliffTranslation)]
 [OutputType(typeof(XliffTranslation))]
 public class GetXliffTranslationCmdlet : PSCmdlet
 {
+    [ParameterDescription("One or more XLIFF files to process. May also contain one or more directories to search for XLIFF files.")]
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
     [Alias("FullName")]
     public string[] Path { get; set; }
 
+    [ParameterDescription("If Path contains directories, specifies whether or not to also search subdirectories.")]
     [Parameter()]
     public SwitchParameter Recurse { get; set; }
 
