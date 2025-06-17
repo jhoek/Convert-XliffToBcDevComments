@@ -1,9 +1,11 @@
 using System.Diagnostics;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using UncommonSense.PowerShell.Maml.Attributes;
 
 namespace ConvertXliffToBcDevComments;
 
+[CmdletDescription("Removes translations from their respective translation files.")]
 [Cmdlet(VerbsCommon.Remove, Nouns.XliffTranslation)]
 public class RemoveXliffTranslationCmdlet : PSCmdlet
 {

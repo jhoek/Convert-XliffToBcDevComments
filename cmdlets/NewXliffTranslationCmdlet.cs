@@ -8,10 +8,10 @@ namespace ConvertXliffToBcDevComments;
 [OutputType(typeof(XliffTranslation))]
 public class NewXliffTranslationCmdlet : Cmdlet
 {
-    [Parameter()] public string XliffPath { get; set; }
-    [Parameter()] public string SourceLanguage { get; set; } = Facts.BaseLanguage;
-    [Parameter(Mandatory = true)] public string TargetLanguage { get; set; }
-    [Parameter(Mandatory = true)] public string ID { get; set; }
+    [ParameterDescription("Path to the XLIFF file")][Parameter()] public string XliffPath { get; set; }
+    [ParameterDescription("Source language for the translation; defaults to 'en-US'")][Parameter()] public string SourceLanguage { get; set; } = Facts.BaseLanguage;
+    [ParameterDescription("Target language for the translation")][Parameter(Mandatory = true)] public string TargetLanguage { get; set; }
+    [ParameterDescription("Unique ID for the translation")][Parameter(Mandatory = true)] public string ID { get; set; }
     [Parameter()] public string Source { get; set; }
     [Parameter(Mandatory = true)] public string Target { get; set; }
     [Parameter()] public TranslationState? TargetState { get; set; }

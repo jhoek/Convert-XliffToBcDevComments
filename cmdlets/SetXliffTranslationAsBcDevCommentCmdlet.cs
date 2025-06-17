@@ -4,9 +4,11 @@ using System.Runtime.InteropServices;
 using Microsoft.Dynamics.Nav.CodeAnalysis.InternalSyntax;
 using Microsoft.Dynamics.Nav.CodeAnalysis.Syntax;
 using Microsoft.Dynamics.Nav.CodeAnalysis.Utilities;
+using UncommonSense.PowerShell.Maml.Attributes;
 
 namespace ConvertXliffToBcDevComments;
 
+[CmdletDescription("Adds translations to AL objects (as developer comments in label properties).")]
 [Cmdlet(VerbsCommon.Set, "XliffTranslationAsBcDevComment")]
 [OutputType(typeof(XliffTranslation))]
 public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
