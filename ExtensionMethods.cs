@@ -18,6 +18,9 @@ public static class ExtensionMethods
             .Reverse()
             .JoinString(" - ");
 
+    public static bool Matches(this SyntaxToken syntaxToken, string value) =>
+        syntaxToken.ValueText.Equals(value, StringComparison.InvariantCultureIgnoreCase);
+
     private static IEnumerable<string> ContextStringElements(this SyntaxNode syntaxNode)
     {
         var currentSyntaxNode = syntaxNode;

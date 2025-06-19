@@ -27,6 +27,7 @@ public class DeveloperComment
 
     public string LanguageCode { get; }
     public string Value { get; }
+    public bool HasLanguageCode => LanguageCode is not null;
 
     public override string ToString()
     {
