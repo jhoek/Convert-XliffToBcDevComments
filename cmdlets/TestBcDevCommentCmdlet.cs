@@ -25,7 +25,7 @@ public class TestBcDevCommentCmdlet : PSCmdlet
         public override SyntaxNode VisitLabel(LabelSyntax node)
         {
             var labelText = node.LabelText.Value.ValueText.UnquoteLiteral();
-            var containingObject = node.GetContainingObjectSyntax();
+            var containingObject = node.GetContainingApplicationObjectSyntax();
             var containingObjectText = $"{containingObject.GetType().Name.RegexReplace("Syntax$", "")} {containingObject.Name.Identifier.ValueText}";
 
             if (IsLocked(node))
@@ -166,8 +166,14 @@ public class TestBcDevCommentCmdlet : PSCmdlet
             .ForEach(p =>
             {
                 WriteVerbose($"Examining {p}");
-                var compilationUnit = SyntaxFactory.ParseSyntaxTree(File.ReadAllText(p), p).GetRoot();
-                compilationUnit = rewriter.Visit(compilationUnit);
+
+                SyntaxFactory
+                    .ParseSyntaxTree(File.ReadAllText(p), p)
+                    .GetRoot()
+                    .ChildNodes()
+                    .OfType<ApplicationObjectSyntax>()
+                    .ToList().
+                    ForEach(a => rewriter.Visit(a));
             });
 
         WriteObject(!rewriter.AnyProblemsFound);
