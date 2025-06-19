@@ -51,7 +51,7 @@ public class TestBcDevCommentCmdlet : PSCmdlet
                 return base.VisitLabel(node);
             }
 
-            WriteVerbose?.Invoke($"Developer comments found for languages {string.Join(",", developerCommentLanguages)} in label {labelText}");
+            WriteVerbose?.Invoke($"Developer comments found for languages {string.Join(",", developerCommentLanguages)} in label '{labelText}'");
 
             ExpectedLanguages
                 .Where(e => !developerCommentLanguages.Contains(e))
@@ -67,7 +67,7 @@ public class TestBcDevCommentCmdlet : PSCmdlet
 
             if (maxLength == 0)
             {
-                WriteVerbose?.Invoke($"No maximum length found for label {labelText}.");
+                WriteVerbose?.Invoke($"No maximum length found for label '{labelText}'.");
                 return base.VisitLabel(node);
             }
 
@@ -77,7 +77,7 @@ public class TestBcDevCommentCmdlet : PSCmdlet
                 .ForEach(c =>
                     {
                         AnyProblemsFound = true;
-                        WriteWarning($"Developer comment for language {c.LanguageCode} exceeds the maximum length of {maxLength} for label {labelText}");
+                        WriteWarning($"Developer comment for language {c.LanguageCode} exceeds the maximum length of {maxLength} for label '{labelText}'");
                     });
 
             return base.VisitLabel(node);
