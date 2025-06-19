@@ -25,10 +25,12 @@ public class TestBcDevCommentCmdlet : PSCmdlet
         public override SyntaxNode VisitLabel(LabelSyntax node)
         {
             var labelText = node.LabelText.Value.ValueText.UnquoteLiteral();
+            var containingObject = node.GetContainingObjectSyntax();
+            var containingObjectText = $"{containingObject.GetType().Name.RegexReplace("Syntax$", "")} {containingObject.Name.Identifier.ValueText}";
 
             if (IsLocked(node))
             {
-                WriteVerbose?.Invoke($"Label '{labelText}' is locked and will not be analyzed further.");
+                WriteVerbose?.Invoke($"Label '{labelText}' in {containingObjectText} is locked and will not be analyzed further.");
                 return base.VisitLabel(node);
             }
 
@@ -37,7 +39,7 @@ public class TestBcDevCommentCmdlet : PSCmdlet
             if (comment is null)
             {
                 AnyProblemsFound = true;
-                WriteWarning?.Invoke($"Developer comment expected but not found for label '{labelText}'.");
+                WriteWarning?.Invoke($"Developer comment expected but not found for label '{labelText}' in {containingObjectText}.");
                 return base.VisitLabel(node);
             }
 
@@ -47,11 +49,11 @@ public class TestBcDevCommentCmdlet : PSCmdlet
             if (!developerCommentLanguages.Any())
             {
                 AnyProblemsFound = true;
-                WriteWarning?.Invoke($"Developer comments with language codes expected but not found for label '{labelText}'.");
+                WriteWarning?.Invoke($"Developer comments with language codes expected but not found for label '{labelText}' in {containingObjectText}.");
                 return base.VisitLabel(node);
             }
 
-            WriteVerbose?.Invoke($"Developer comments found for languages {string.Join(",", developerCommentLanguages)} in label '{labelText}'");
+            WriteVerbose?.Invoke($"Developer comments found for languages {string.Join(",", developerCommentLanguages)} in label '{labelText}' in {containingObjectText}");
 
             ExpectedLanguages
                 .Where(e => !developerCommentLanguages.Contains(e))
@@ -59,7 +61,7 @@ public class TestBcDevCommentCmdlet : PSCmdlet
                 .ForEach(e =>
                     {
                         AnyProblemsFound = true;
-                        WriteWarning?.Invoke($"Developer comment expected for language {e} but not found for label '{labelText}'.");
+                        WriteWarning?.Invoke($"Developer comment expected for language {e} but not found for label '{labelText}' in {containingObjectText}.");
                     }
                 );
 
@@ -67,7 +69,7 @@ public class TestBcDevCommentCmdlet : PSCmdlet
 
             if (maxLength == 0)
             {
-                WriteVerbose?.Invoke($"No maximum length found for label '{labelText}'.");
+                WriteVerbose?.Invoke($"No maximum length found for label '{labelText}' in {containingObjectText}.");
                 return base.VisitLabel(node);
             }
 
@@ -77,7 +79,7 @@ public class TestBcDevCommentCmdlet : PSCmdlet
                 .ForEach(c =>
                     {
                         AnyProblemsFound = true;
-                        WriteWarning($"Developer comment for language {c.LanguageCode} exceeds the maximum length of {maxLength} for label '{labelText}'");
+                        WriteWarning($"Developer comment for language {c.LanguageCode} exceeds the maximum length of {maxLength} for label '{labelText}' in {containingObjectText}.");
                     });
 
             return base.VisitLabel(node);
