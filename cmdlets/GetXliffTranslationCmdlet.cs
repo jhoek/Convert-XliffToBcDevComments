@@ -13,7 +13,7 @@ public class GetXliffTranslationCmdlet : PSCmdlet
     [Alias("FullName")]
     public string[] Path { get; set; }
 
-    [ParameterDescription("If Path contains directories, specifies whether or not to also search subdirectories.")]
+    [ParameterDescription("If -Path contains directories, specifies whether to also search subdirectories.")]
     [Parameter()]
     public SwitchParameter Recurse { get; set; }
 
