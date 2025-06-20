@@ -9,6 +9,7 @@ namespace ConvertXliffToBcDevComments;
 [Cmdlet(VerbsCommon.Remove, Nouns.XliffTranslation)]
 public class RemoveXliffTranslationCmdlet : PSCmdlet
 {
+    [ParameterDescription("Translation to remove")]
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
     public XliffTranslation[] InputObject { get; set; }
 

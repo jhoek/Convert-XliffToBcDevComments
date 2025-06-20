@@ -12,10 +12,10 @@ public class NewXliffTranslationCmdlet : Cmdlet
     [ParameterDescription("Source language for the translation; defaults to 'en-US'")][Parameter()] public string SourceLanguage { get; set; } = Facts.BaseLanguage;
     [ParameterDescription("Target language for the translation")][Parameter(Mandatory = true)] public string TargetLanguage { get; set; }
     [ParameterDescription("Unique ID for the translation")][Parameter(Mandatory = true)] public string ID { get; set; }
-    [Parameter()] public string Source { get; set; }
-    [Parameter(Mandatory = true)] public string Target { get; set; }
-    [Parameter()] public TranslationState? TargetState { get; set; }
-    [Parameter(Mandatory = true)] public string Context { get; set; }
+    [ParameterDescription("Source text for the translation")][Parameter()] public string Source { get; set; }
+    [ParameterDescription("Target text for the translation")][Parameter(Mandatory = true)] public string Target { get; set; }
+    [ParameterDescription("State of the translation target text")][Parameter()] public TranslationState? TargetState { get; set; }
+    [ParameterDescription("Context for the translation")][Parameter(Mandatory = true)] public string Context { get; set; }
 
     protected override void EndProcessing()
     {

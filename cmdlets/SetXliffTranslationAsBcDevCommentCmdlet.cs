@@ -101,25 +101,32 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
         }
     }
 
+    [ParameterDescription("Path of the AL object file to update. May also contain one or more directories to search for AL objects.")]
     [Parameter(Mandatory = true, Position = 0)]
     public string[] ObjectPath { get; set; }
 
+    [ParameterDescription("If -Path contains directories, specifies whether to also search subdirectories.")]
     [Parameter()]
     public SwitchParameter Recurse { get; set; }
 
+    [ParameterDescription("One or more descriptions as retrieved using Get-XliffTranslation or created using New-XliffTranslation")]
     [Parameter(Mandatory = true, ValueFromPipeline = true)]
     public XliffTranslation[] Translations { get; set; }
 
+    [ParameterDescription("Translation target states to convert to AL developer comments; other states will be ignored")]
     [Parameter()]
     [Alias("IncludeState")] // Previous name, for backward compatibility
     public TranslationState[] StateToProcess { get; set; } = [TranslationState.Final, TranslationState.Translated, TranslationState.SignedOff];
 
+    [ParameterDescription("Translation target states that will be emitted after processing.")]
     [Parameter()]
     public TranslationState[] StateToEmit { get; set; } = [TranslationState.Final, TranslationState.NeedsTranslation, TranslationState.New, TranslationState.SignedOff, TranslationState.Translated];
 
+    [ParameterDescription("Overwrite developer comments if they already exist")]
     [Parameter()]
     public SwitchParameter Force { get; set; }
 
+    [ParameterDescription("Output the translations that match the -StateToEmit filter to the PowerShell pipeline")]
     [Parameter()]
     public SwitchParameter PassThru { get; set; }
 
