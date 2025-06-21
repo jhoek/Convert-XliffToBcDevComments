@@ -9,6 +9,7 @@ using UncommonSense.PowerShell.Maml.Attributes;
 namespace ConvertXliffToBcDevComments;
 
 [CmdletDescription("Adds translations to AL objects (as developer comments in label properties).")]
+[CmdletExample(Introduction = "Read translations from test.nl-NL.xlf, (where possible) add developer comments to AL objects in (subfolders of) ./test, and removes the applied translations from the translation (xliff) file.", Code = "Get-XliffTranslation -Path './Translations/test.nl-NL.xlf'| Set-XliffTranslationAsBcDevComment -ObjectPath ./test -Recurse -PassThru| Remove-XliffTranslation")]
 [Cmdlet(VerbsCommon.Set, "XliffTranslationAsBcDevComment")]
 [OutputType(typeof(XliffTranslation))]
 public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet

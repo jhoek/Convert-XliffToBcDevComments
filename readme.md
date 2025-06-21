@@ -221,6 +221,14 @@ Set-XliffTranslationAsBcDevComment [-ObjectPath] <string[]> -Translations <Xliff
     Accept pipeline input?       false
     Aliases                      
     Accept wildcard characters?  false
+### Examples
+#### Example 
+```powershell
+Get-XliffTranslation -Path './Translations/test.nl-NL.xlf'| Set-XliffTranslationAsBcDevComment -ObjectPath ./test -Recurse -PassThru| Remove-XliffTranslation
+
+```
+
+
 <div style='font-size:small'>License: https://github.com/jhoek/Convert-XliffToBcDevComments?tab=MIT-1-ov-file</div>
 <div style='font-size:small'>(c) jhoek. All rights reserved.</div>
-<div style='font-size:small; color: #ccc'>Generated 21-06-2025 10:20</div>
+<div style='font-size:small; color: #ccc'>Generated 21-06-2025 10:48</div>
