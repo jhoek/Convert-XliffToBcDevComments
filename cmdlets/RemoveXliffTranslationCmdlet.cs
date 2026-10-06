@@ -13,6 +13,12 @@ public class RemoveXliffTranslationCmdlet : PSCmdlet
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
     public XliffTranslation[] InputObject { get; set; }
 
+    [Parameter()]
+    [ParameterDescription("Indicates which note element to use (based on the 'from' attribute) to find the translation's context.")]
+    [ValidateNotNull()]
+    [ArgumentCompletions("'Xliff Generator'", "Developer")]
+    public string ContextNote { get; set; } = "Xliff Generator";
+
     protected List<XliffTranslation> CachedTranslations = [];
 
     public readonly XNamespace @namespace = "urn:oasis:names:tc:xliff:document:1.2";
@@ -55,7 +61,7 @@ public class RemoveXliffTranslationCmdlet : PSCmdlet
         var translationUnit = translationUnits
             .SingleOrDefault(u => u
                 .Elements(@namespace + "note")
-                .Where(n => n.Attribute("from").Value == "Xliff Generator")
+                .Where(n => n.Attribute("from").Value == ContextNode)
                 .Where(n => n.Value == translation.Context)
                 .Any()
             );
