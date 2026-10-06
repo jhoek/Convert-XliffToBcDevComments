@@ -135,22 +135,22 @@ public static class ExtensionMethods
 
     public static string GetNamespace(this string context)
     {
-        if (string.IsNullOrEmpty(context)) return context;
+        if (string.IsNullOrEmpty(context)) return null;
 
-        var match = Regex.Match(@"^\(Namespace=(.*)\)\(LookupHint=(.*)\)$");
+        var match = Regex.Match(context, @"^\(Namespace=(.*)\)\(LookupHint=(.*)\)$");
 
-        if (!match.Success) return "";
+        if (!match.Success) return null;
 
         return match.Groups[1].Value;
     }
 
     public static string GetLookupHint(this string context)
     {
-        if (string.IsNullOrEmpty(context)) return context;
+        if (string.IsNullOrEmpty(context)) return null;
 
-        var match = Regex.Match(@"^\(Namespace=(.*)\)\(LookupHint=(.*)\)$");
+        var match = Regex.Match(context, @"^\(Namespace=(.*)\)\(LookupHint=(.*)\)$");
 
-        if (!match.Success) return "";
+        if (!match.Success) return null;
 
         return match.Groups[2].Value;
     }
