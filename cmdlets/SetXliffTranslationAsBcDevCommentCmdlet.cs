@@ -33,7 +33,7 @@ public class SetXliffTranslationAsBcDevCommentCmdlet : PSCmdlet
             var contextString = node.ContextString();
             WriteVerbose($"- Context string is {contextString}");
 
-            var translation = Translations.SingleOrDefault(t => t.Context.Matches(contextString));
+            var translation = Translations.SingleOrDefault(t => (t.LookupHint ?? t.Context).Matches(contextString));
 
             if (translation is not null)
             {
