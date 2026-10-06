@@ -17,6 +17,12 @@ public class GetXliffTranslationCmdlet : PSCmdlet
     [Parameter()]
     public SwitchParameter Recurse { get; set; }
 
+    [Parameter()]
+    [ParameterDescription("Indicates which note element to use (based on the 'from' attribute) to find the translation's context.")]
+    [ValidateNotNull()]
+    [ArgumentCompletions("'Xliff Generator'", "Developer")]
+    public string ContextNote { get; set; } = "Xliff Generator";
+
     protected List<string> CachedPaths = [];
 
     protected override void ProcessRecord()
@@ -53,7 +59,7 @@ public class GetXliffTranslationCmdlet : PSCmdlet
                         Source = u.Element(@namespace + "source").Value,
                         Target = u.Element(@namespace + "target")?.Value,
                         TargetState = u.Element(@namespace + "target")?.Attribute("state")?.Value,
-                        Context = u.Elements(@namespace + "note").SingleOrDefault(e => e.Attribute("from")?.Value == "Xliff Generator")?.Value
+                        Context = u.Elements(@namespace + "note").SingleOrDefault(e => e.Attribute("from")?.Value == ContextNote)?.Value
                     }
                     )
                 )
