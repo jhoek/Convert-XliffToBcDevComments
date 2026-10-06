@@ -2,6 +2,7 @@ using System.Collections;
 using System.Management.Automation.Language;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using Microsoft.Dynamics.Nav.CodeAnalysis.Syntax;
 using Microsoft.Dynamics.Nav.CodeAnalysis.Utilities;
 
@@ -131,4 +132,26 @@ public static class ExtensionMethods
 
     public static PropertyKind PropertyKind(this PropertySyntax propertySyntax) =>
         Enum.Parse<PropertyKind>(propertySyntax.Name.Identifier.ValueText, true);
+
+    public static string GetNamespace(this string context)
+    {
+        if (string.IsNullOrEmpty(context)) return context;
+
+        var match = Regex.Match(@"^\(Namespace=(.*)\)\(LookupHint=(.*)\)$");
+
+        if (!match.Success) return "";
+
+        return match.Groups[1].Value;
+    }
+
+    public static string GetLookupHint(this string context)
+    {
+        if (string.IsNullOrEmpty(context)) return context;
+
+        var match = Regex.Match(@"^\(Namespace=(.*)\)\(LookupHint=(.*)\)$");
+
+        if (!match.Success) return "";
+
+        return match.Groups[2].Value;
+    }
 }
