@@ -137,7 +137,7 @@ public static class ExtensionMethods
     {
         if (string.IsNullOrEmpty(context)) return null;
 
-        var match = Regex.Match(context, @"^\(Namespace=(.*)\)\(LookupHint=(.*)\)$");
+        var match = Regex.Match(context, @"^.*?\(Namespace=(.*)\)\(LookupHint=(.*)\)$");
 
         if (!match.Success) return null;
 
@@ -148,7 +148,7 @@ public static class ExtensionMethods
     {
         if (string.IsNullOrEmpty(context)) return null;
 
-        var match = Regex.Match(context, @"^\(Namespace=(.*)\)\(LookupHint=(.*)\)$");
+        var match = Regex.Match(context, @"^.*?\(Namespace=(.*)\)\(LookupHint=(.*)\)$");
 
         if (!match.Success) return null;
 
