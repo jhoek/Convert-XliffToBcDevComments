@@ -61,7 +61,7 @@ public class RemoveXliffTranslationCmdlet : PSCmdlet
         var translationUnit = translationUnits
             .SingleOrDefault(u => u
                 .Elements(@namespace + "note")
-                .Where(n => n.Attribute("from").Value == ContextNode)
+                .Where(n => n.Attribute("from").Value == ContextNote)
                 .Where(n => n.Value == translation.Context)
                 .Any()
             );
