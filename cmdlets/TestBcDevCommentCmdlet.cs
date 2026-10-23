@@ -172,8 +172,8 @@ public class TestBcDevCommentCmdlet : PSCmdlet
                     .GetRoot()
                     .ChildNodes()
                     .OfType<ApplicationObjectSyntax>()
-                    .ToList().
-                    ForEach(a => rewriter.Visit(a));
+                    .ToList()
+                    .ForEach(a => rewriter.Visit(a));
             });
 
         WriteObject(!rewriter.AnyProblemsFound);
